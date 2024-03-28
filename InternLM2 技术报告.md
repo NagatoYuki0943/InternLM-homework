@@ -168,7 +168,7 @@ InternEvo 的效率在人类反馈强化学习 （RLHF） 阶段也得到了成�
 
 条件奖励模型代表了一种创新的解决方案，可以解决以前 RLHF 方法偏好建模中固有的挑战。与通常依靠多个偏好模型来解决不同领域的偏好冲突的传统方法不同，条件奖励模型结合了针对不同类型偏好的不同系统提示，以有效地在单一奖励模型中对各种偏好进行建模。
 
-![image-20240328112602794](InternLM2%20%E6%8A%80%E6%9C%AF%E6%8A%A5%E5%91%8A.assets/Architecture of the Conditional Reward Model.png)
+<img src="InternLM2%20%E6%8A%80%E6%9C%AF%E6%8A%A5%E5%91%8A.assets/Architecture of the Conditional Reward Model.png" alt="image-20240328112602794" />
 
 （a） LLaMA2采用不同的奖励模型来解决偏好冲突问题。（b）我们所提出的条件奖励模型利用条件系统提示来协调各个领域的偏好数据，从而能够使用单一奖励模型对多个偏好进行建模。
 
