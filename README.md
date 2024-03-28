@@ -1,7 +1,6 @@
 # InternLM-homewordk
 ## 作业1
 
-直播笔记
+<a href="">直播笔记</a>
 
-[InternLM2 技术报告](./InternLM2 技术报告.md)
-
+<a href="InternLM2 技术报告.md">InternLM2 技术报告.md</a>
