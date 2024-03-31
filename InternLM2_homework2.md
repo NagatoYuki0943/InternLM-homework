@@ -6,7 +6,7 @@
 
 # 熟悉 `huggingface` 下载功能，使用 `huggingface_hub` python 包，下载 `InternLM2-Chat-7B` 的 `config.json` 文件到本地
 
-![](InternLM2_homework2.assets/huggingface _cli.png)
+![](InternLM2_homework2.assets/huggingface%20_cli.png)
 
 # 完成 `Lagent` 工具调用 `数据分析` Demo 部署
 
