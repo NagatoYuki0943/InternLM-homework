@@ -1,3 +1,71 @@
+
+
+# InternLM2 模型
+
+开源了7B和12B大小的模型，分别发布了Base、SFT、RLHF各阶段的模型。分别面向不同的应用场景。
+
+在多个维度评估数据价值，使用了高质量的语料数据集，并有针对性的对数据进行了补齐。 
+
+## InternLM2 主要亮点
+
+- 超长上下文，支持20k长度的上下文
+- 综合能力提升，在推理、数学、代码能力上提升明显
+- 优秀的对话和创作体验，精准指令跟随，丰富的结构化创作，对话充满人文关怀
+- 用具调用，支持工具调用，支持搜索、计算、代码解释等
+- 拥有数理能力和数据分析能力，内生计算力强大，加入代码解释后数学能力和代码能力进一步提升，并具有数据分析能力
+
+# 全链路开源体系
+
+## 数据
+
+开源书生万卷多模态数据集，数据量高达2TB
+
+融合图片，文本，媒体等模态。数据经过精细的筛选，信息密度高。
+
+我所在的行业是智慧农业行业，在农业行业方面，突出的问题是数据集极度缺乏。无论是用于作物/病虫害识别的图片数据，还是用来训练语言模型的文本数据，都很难在互联网上找到能用的数据，需要自己想办法去搜集。目前公开的文本数据集虽然数量很庞大，比如书生数据集，但是数据的分类还是按照网页数据/论文/书籍/专利等这种通用方式划分的，我认为数据集中的数据集绝对包含农业及其他行业的数据，但是没有进行有效的分类，因此，能够对现有的开源数据集进行另一种维度的划分，比如按照行业进行划分，能够对下游任务的微调产生显著作用，不过如何按照自定义规则有效划分现有数据集也是一个需要解决的问题。
+
+## InternEvo训练框架
+
+支持从8卡到千卡训练，支持Zero、FlashAttention等技术，加速训练。兼容主流Huggingface生态，支持轻量化技术。并且支持开箱即用。
+
+## Xtuner微调框架
+
+支持增量预训练（垂直领域只是）和有监督微调（对话数据）。
+
+支持全残微调和部分参数微调。
+
+适配不同的微调算法，适配Huggingface和ModelScope模型或数据集。
+
+支持自动优化加速，开发者无需关注优化细节。
+
+支持20系以上显卡，可以使用8GB显存微调7B模型。
+
+我自己的使用感受是相比使用Transformers库来训练，既节省显存，又能提高训练速度，我自己的测试发现在使用相同的方式微调时速度甚至能快2到3倍。
+
+## OpenCompass大模型评测
+
+提供中立全面的性能榜单。
+
+CimpassKit：大模型评测全栈工具链。支持数据污染检查、支持丰富的模型推理接入、长文本能力评测、中英文双语主观评测。
+
+建立了开源共享的大模型评测基准社区。
+
+## LMDeploy大模型部署
+
+支持在GPU上部署的全流程解决方案，包括模型轻量化、推理和服务。
+
+支持多种轻量化，包括4bit权重和8bit K/V cache量化。推理引擎支持高效的turbomind引擎和开发友好的pytorch引擎。支持server、gradio和triton服务。支持python、grpc和RESTful推理。
+
+尝试使用Tuibomind和Pytorch推理后发现Turbomind推理要快很多，不过发现一个问题时当前的文档说明有些模糊，比如W8A8的格式似乎不能用Trubomind推理，而W4A16格式只能使用Turbomind推理，文档能够说明这些注意点就更好了。
+
+## Lagent 智能体框架
+
+支持ReAct、ReWoo、AtuoGPT等智能体流程，并灵活支持各种大预言模型，支持丰富的工具。
+
+
+
+
+
 # InternLM2 技术报告笔记
 
 ## 1. 基本内容
@@ -50,7 +118,7 @@ InternEvo 的效率在人类反馈强化学习 （RLHF） 阶段也得到了成�
 
 选择坚持LLaMA的结构设计原则。为了提高效率，我们修改了 $W_q$、$W_k$、$W_v$​ 矩阵布局，在矩阵的最后一个维度拆分或拼接矩阵来实现 tensor parallel 大小的调整，从而增强了模型在不同分布式计算环境中的灵活性。
 
-<img src="InternLM2 tech report.assets/weight matrix layouts.png" alt="image-20240328092147423" style="zoom：67%；" />
+<img src="./InternLM2_note1.assets/weight%20matrix%20layouts.png" alt="image-20240328092147423" style="zoom：67%；" />
 
 ## 3. 预训练
 
@@ -66,19 +134,19 @@ InternEvo 的效率在人类反馈强化学习 （RLHF） 阶段也得到了成�
 
 自网页的中英文数据占总数的86.46%，是主要来源。其他来源的数据量相对较小，例如书籍和技术文献（缩写为techlit），但平均文档长度更长，内容质量相对较高，因此同样重要。
 
-<img src="InternLM2 tech report.assets/text data.png" alt="image-20240328092714566" style="zoom： 67%；" />
+<img src="./InternLM2_note1.assets/text%20data.png" alt="image-20240328092714566" style="zoom： 67%；" />
 
 ##### 数据处理管道
 
 整个数据处理流水线首先对来自不同来源的数据进行标准化，以获得**格式化数据**。然后，使用启发式统计规则进行数据过滤，以获得**干净的数据**。接下来，使用局部敏感哈希（LSH）方法进行重复数据删除，以获取**重复数据删除数据**。然后，我们应用复合安全策略来过滤数据，从而产生**安全数据**。我们对来自不同来源的数据采用了不同的质量过滤策略，最终获得了**高质量的预训练数据**。
 
-<img src="InternLM2 tech report.assets/Data Process Pipeline.png" alt="image-20240328093117086" style="zoom： 67%；" />
+<img src="./InternLM2_note1.assets/Data%20Process%20Pipeline.png" alt="image-20240328093117086" style="zoom： 67%；" />
 
 #### 3.1.2 代码
 
 ##### 数据源分布
 
-<img src="InternLM2 tech report.assets/code data.png" alt="image-20240328093253492" style="zoom：50%；" />
+<img src="./InternLM2_note1.assets/code%20data.png" alt="image-20240328093253492" style="zoom：50%；" />
 
 我们从各种来源收集数据，包括从 GitHub 直接抓取、公共数据集以及与代码和编程相关的在线资源，如问答论坛、教程网站和 API 文档。
 
@@ -92,11 +160,11 @@ InternEvo 的效率在人类反馈强化学习 （RLHF） 阶段也得到了成�
 
 ##### 质量过滤
 
-<img src="InternLM2 tech report.assets/code quality classifier pipeline.png" alt="image-20240328093948466" style="zoom：50%；" />
+<img src="./InternLM2_note1.assets/code%20quality%20classifier%20pipeline.png" alt="image-20240328093948466" style="zoom：50%；" />
 
 数据质量是LLM研究中预训练的一个关键但模糊的方面，主要是因为难以量化其对模型性能的影响。我们采用了混合的多阶段过滤过程，包括基于规则和模型的评分器。基于规则的评分器是启发式的和多样化的。对于基于模型的评分，我们评估了几个骨干模型，用大约 50,000 个样本训练它们。不过，我们观察到，评分模型评估与人类判断之间的相关性因语言而异，扩大训练集并不能显着提高评分模型的准确性。因此，我们只对模型预测与人工注释的验证集上的人工评估非常一致的语言采用基于模型的评分。
 
-<img src="InternLM2 tech report.assets/code quality.png" alt="image-20240328093611498" style="zoom： 67%；" />
+<img src="./InternLM2_note1.assets/code%20quality.png" alt="image-20240328093611498" style="zoom： 67%；" />
 
 我们根据训练好的评分模型对代码数据质量进行评估。高质量的数据将具有更高的采样权重，并且可以在预训练阶段进行多次训练迭代。中等质量的数据具有正常的采样权重，通常训练一次。低质量的数据被排除在外，因为我们的实证研究结果证实，尽管它们的比例相对较小，但删除它们对于优化模型性能和确保训练稳定性至关重要。
 
@@ -154,7 +222,7 @@ InternEvo 的效率在人类反馈强化学习 （RLHF） 阶段也得到了成�
 
 在监督微调 （SFT） 阶段，我们使用了 1000 万个指令实例的数据集，这些实例已经过筛选，以确保它们的有用性和无害性。该数据集涵盖了广泛的主题，包括一般对话、NLP 任务、数学问题、代码生成和函数调用等。为了便于多功能地表示这些不同的任务，我们将数据样本转换为ChatML格式。7B 和 20B 模型都使用 AdamW 优化器进行一个 epoch 的训练，初始学习率为 4e-5。
 
-<img src="InternLM2 tech report.assets/The distribution of SFT data instances.png" alt="image-20240328111313142" style="zoom: 50%;" />
+<img src="./InternLM2_note1.assets/The%20distribution%20of%20SFT%20data%20instances.png" alt="image-20240328111313142" style="zoom: 50%;" />
 
 ### 4.2 COOL RLHF
 
@@ -168,7 +236,7 @@ InternEvo 的效率在人类反馈强化学习 （RLHF） 阶段也得到了成�
 
 条件奖励模型代表了一种创新的解决方案，可以解决以前 RLHF 方法偏好建模中固有的挑战。与通常依靠多个偏好模型来解决不同领域的偏好冲突的传统方法不同，条件奖励模型结合了针对不同类型偏好的不同系统提示，以有效地在单一奖励模型中对各种偏好进行建模。
 
-<img src="InternLM2 tech report.assets/Architecture of the Conditional Reward Model.png" alt="image-20240328112602794" />
+<img src="./InternLM2_note1.assets/Architecture%20of%20the%20Conditional%20Reward%20Model.png" alt="image-20240328112602794" />
 
 （a） LLaMA2采用不同的奖励模型来解决偏好冲突问题。（b）我们所提出的条件奖励模型利用条件系统提示来协调各个领域的偏好数据，从而能够使用单一奖励模型对多个偏好进行建模。
 
@@ -238,13 +306,13 @@ $$
 
 我们从 SFT 模型权重初始化 reference 模型和 actor 模型。critic 模型是从奖励模型（不包括线性头）初始化的，并经过 50 次迭代的预训练阶段，在此期间，actor 模型被冻结。此阶段对于稳定早期训练中的值估计至关重要，从而防止不稳定值的潜在不利影响。我们进行了消融实验，比较 critic 模型使用奖励模型或SFT模型作为初始化的差异。我们的结果表明，在PPO训练的前几次迭代中，从奖励模型初始化的 critic 模型表现出较大的损失，但在大约20次迭代后，它始终表现出较低的损失，并为 actor 模型带来了更高的奖励。我们假设，在初始阶段观察到的较高损失可能揭示了奖励建模和批评建模任务之间的根本差异。随后的损失减少可归因于模型内部对世界知识的理解更加一致，和对评估原则的掌握也更加准确。
 
-![image-20240328151010844](InternLM2 tech report.assets/image-20240328151010844.png)
+![image-20240328151010844](./InternLM2_note1.assets/image-20240328151010844.png)
 
 ##### 条件奖励
 
 我们的奖励模型经过训练以适应各种条件。对于来自不同领域的查询，在计算奖励分数之前为每个样本响应添加适当的条件系统提示。确保模型的响应在上下文中与不同领域的不同需求保持一致。
 
-<img src="InternLM2 tech report.assets/image-20240328152153980.png" alt="image-20240328152153980" style="zoom:50%;" />
+<img src="./InternLM2_note1.assets/image-20240328152153980.png" alt="image-20240328152153980" style="zoom:50%;" />
 
 ##### 预训练梯度
 
@@ -260,7 +328,7 @@ $$
 
 为了增强 InternLM2 的数据分析能力，我们选择了 DS-1000 中使用的代码库作为核心存储库，包括 Pandas、Numpy、Tensorflow、Scipy、Scikit-learn、PyTorch 和 Matplotlib。然后，我们在 GitHub 上搜索具有超过 10,000 颗星的存储库，这些存储库引用了这些核心存储库，并执行了与预训练相同的过滤和数据清理过程。对于每个存储库，我们最初使用深度优先的方法对获取的原始数据进行排序，同时生成简要描述文件内容所需的提示。随后，我们按顺序拼接处理后的数据，直到达到 32k 的长度。实验结果表明，长上下文代码数据不仅提高了LLM的长上下文能力，还提高了代码能力。
 
-<img src="InternLM2 tech report.assets/Illustration of the process to obtain long-context code data.png" alt="image-20240328141139726" style="zoom： 80%;" />
+<img src="./InternLM2_note1.assets/Illustration%20of%20the%20process%20to%20obtain%20long-context%20code%20data.png" alt="image-20240328141139726" style="zoom： 80%;" />
 
 ### 4.4 使用工具
 
