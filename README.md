@@ -1,6 +1,6 @@
 
 
-# [InternLM/Tutorial](https://github.com/InternLM/Tutorial)
+# [InternLM/Tutorial](https://github.com/InternLM/Tutorial/tree/camp2)
 
 # InternLM-homework
 
