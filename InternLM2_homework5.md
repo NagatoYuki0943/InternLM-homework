@@ -514,7 +514,7 @@ def model(image, text):
         width, height = image.size
         print(f"width = {width}, height = {height}")
         # 调整图片最长宽/高为256
-        ratio = max(width, height) // 256
+        ratio = max(width, height) / 256
         print(f"new width = {width//ratio}, new height = {height//ratio}")
         image = image.resize((width//ratio, height//ratio))
 
