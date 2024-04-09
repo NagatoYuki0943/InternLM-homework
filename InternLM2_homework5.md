@@ -494,6 +494,8 @@ ssh -CNg -L 7860:127.0.0.1:7860 root@ssh.intern-ai.org.cn -p 42225
 
 > 打印 `response.text` 为空
 
+
+
 ![llava5](InternLM2_homework5.assets/llava5.png)
 
 > 解决办法为降低分辨率
@@ -510,28 +512,32 @@ def model(image, text):
     if image is None:
         return [(text, "请上传一张图片。")]
     else:
-
         width, height = image.size
         print(f"width = {width}, height = {height}")
-        # 调整图片最长宽/高为256
-        ratio = max(width, height) / 256
-        print(f"new width = {width//ratio}, new height = {height//ratio}")
-        image = image.resize((width//ratio, height//ratio))
 
-        response = pipe((text, image))
+        # 调整图片最长宽/高为256
+        if max(width, height) > 256:
+            ratio = max(width, height) / 256
+            n_width = int(width / ratio)
+            n_height = int(height / ratio)
+            print(f"new width = {n_width}, new height = {n_height}")
+            image = image.resize((n_width, n_height))
+
+        response = pipe((text, image)).text
         print(f"response: {response}")
-        return [(text, response.text)]
+        return [(text, response)]
 
 demo = gr.Interface(fn=model, inputs=[gr.Image(type="pil"), gr.Textbox()], outputs=gr.Chatbot())
 demo.launch()   
 ```
 
-> 可以正常显示
+> 调整分辨率后可以正常运行
 
 ![](InternLM2_homework5.assets/llava6.png)
 
 > 调整分辨率后可以正常运行
 
-![image-20240409175701592](InternLM2_homework5.assets/llava7.png)
+![](InternLM2_homework5.assets/llava7.png)
 
 ## 将 LMDeploy Web Demo 部署到 [OpenXLab](https://github.com/InternLM/Tutorial/blob/camp2/tools/openxlab-deploy) 
+
