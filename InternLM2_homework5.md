@@ -486,6 +486,23 @@ ssh -CNg -L 7860:127.0.0.1:7860 root@ssh.intern-ai.org.cn -p 42225
 
 ### 高分辨率图片问题
 
+> 已提交bug并被官方解决
+>
+> [camp2 lmdeploy llava运行时输入高分辨率图片会返回空字符串](https://github.com/InternLM/Tutorial/issues/620)
+>
+> [修复了高分辨率图像llava输出为空的bug #620 (#623)](https://github.com/InternLM/Tutorial/commit/3b54212219569b09a7c8a7955cb413f5dd08ad6e)
+>
+> 解决方法如下，解决方法是调高session_len
+
+```python
+from lmdeploy import pipeline, TurbomindEngineConfig
+
+
+backend_config = TurbomindEngineConfig(session_len=8192) # 图片分辨率较高时请调高session_len
+# pipe = pipeline('liuhaotian/llava-v1.6-vicuna-7b', backend_config=backend_config) 非开发机运行此命令
+pipe = pipeline('/share/new_models/liuhaotian/llava-v1.6-vicuna-7b', backend_config=backend_config)
+```
+
 > 当图片分辨率较高时，输出text为空
 >
 > 右侧输出为空
