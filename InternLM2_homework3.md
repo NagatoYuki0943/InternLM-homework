@@ -1,10 +1,12 @@
-# 1. 在[茴香豆 Web 版](https://openxlab.org.cn/apps/detail/tpoisonooo/huixiangdou-web)中创建自己领域的知识问答助手
+# 基础作业
+
+## 1.在[茴香豆 Web 版](https://openxlab.org.cn/apps/detail/tpoisonooo/huixiangdou-web)中创建自己领域的知识问答助手
 
 我使用了一些python教程的pdf作为rag的数据，数据上传了2次，显示有重复，不过在我询问过开发人员后，确认数据会去重，所以无影响。
 
 <img src="InternLM2_homework3.assets/image-20240407094515960.png" alt="image-20240407094515960" style="zoom:50%;" />
 
-## Conway游戏
+### Conway游戏
 
 提问为“请介绍一下Conway游戏，并告诉我实现步骤”，模型正确回答。
 
@@ -34,19 +36,19 @@ Conway游戏，也称为生命游戏，是一种细胞自动机模型，由英�
 python编程快速上手——让繁琐工作自动化（第2版）.pdf
 ```
 
-## 万花尺
+### 万花尺
 
 提问为“实现万花尺玩具需要使用什么库并有哪些注意点呢？”，模型使用了正确的文档并正确回答。
 
 <img src="InternLM2_homework3.assets/万花尺.png" alt="image-20240407100306977" style="zoom:67%;" />
 
-## 仿真鸟群
+### 仿真鸟群
 
 问题为“介绍一下仿真鸟群的定义和规则”，使用了正确的pdf并回答正确。
 
 <img src="InternLM2_homework3.assets/仿真鸟群.png" alt="image-20240407101149323" style="zoom:67%;" />
 
-## 爬虫
+### 爬虫
 
 提问为“使用python从web抓取信息该怎么做？”，找到了正确的文档，但提示检测到敏感内容，无法显示。
 
@@ -92,19 +94,19 @@ print(title)
 Python网络爬虫权威指南_第2版.pdf
 ````
 
-## 照片马赛克
+### 照片马赛克
 
 问题为“如何创建照片马赛克”，RAG找到了正确的文档，模型正确回答了问题。
 
 <img src="InternLM2_homework3.assets/照片马赛克.png" alt="image-20240407102915099" style="zoom:67%;" />
 
-## 自动化控制键盘和鼠标
+### 自动化控制键盘和鼠标
 
 问题为“如何使用GUI自动化控制键盘和鼠标”，使用正确的文档，模型正确回答了问题。
 
 <img src="InternLM2_homework3.assets/自动化控制键盘和鼠标.png" alt="image-20240407104758419" style="zoom:67%;" />
 
-# 2.在 `InternLM Studio` 上部署茴香豆技术助手
+## 2.在 `InternLM Studio` 上部署茴香豆技术助手
 
 > huixiangdou是什么
 
@@ -113,3 +115,5 @@ Python网络爬虫权威指南_第2版.pdf
 > 茴香豆怎么部署到微信群
 
 ![茴香豆怎么部署到微信群](InternLM2_homework3.assets/%E8%8C%B4%E9%A6%99%E8%B1%86%E6%80%8E%E4%B9%88%E9%83%A8%E7%BD%B2%E5%88%B0%E5%BE%AE%E4%BF%A1%E7%BE%A4.png)
+
+# 进阶作业
