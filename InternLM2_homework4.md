@@ -1268,6 +1268,10 @@ git push
 
 ![](InternLM2_homework4.assets/%E6%97%A0%E6%B3%95%E4%B8%8A%E4%BC%A0.png)
 
+> 解决办法是创建私有仓库,这样在 `clone` 时就需要在url中写入秘钥,就可以正常 `push` 了,不清楚上述问题出现的原因
+
+![](InternLM2_homework4.assets/git4.png)
+
 
 
 ### 部署到 OpenXLab
