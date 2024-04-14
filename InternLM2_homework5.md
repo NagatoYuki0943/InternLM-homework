@@ -119,7 +119,38 @@ while True:
     print("\n")
 ```
 
-![image-20240409110054958](InternLM2_homework5.assets/transformers_run.png)
+> 运行命令记录
+
+```sh
+(lm) root@intern-studio-030876:~/lmdeploy# python internlm2_chat_1_8b_load_stream_chat.py 
+torch version:  2.1.2
+transformers version:  4.37.2
+Loading checkpoint shards: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [01:01<00:00, 30.93s/it]
+model.device: cuda:0, model.dtype: torch.bfloat16
+system_prompt:  You are an AI assistant whose name is InternLM (书生·浦语).
+- InternLM (书生·浦语) is a conversational language model that is developed by Shanghai AI Laboratory (上海人工智能实验室). It is designed to be helpful, honest, and harmless.
+- InternLM (书生·浦语) can understand and communicate fluently in the language chosen by the user such as English and 中文.
+
+请输入提示: 请给我讲一个关于猫和老鼠的小故事
+回答: 好的，以下是关于猫和老鼠的小故事：
+
+从前，有一只名叫汤姆的猫，他非常喜欢偷老鼠。有一天，汤姆抓到了一只老鼠，他非常兴奋，决定把这个老鼠作为他的战利品。他把它带回家，准备好好地享受一下这个美味的晚餐。
+
+但是，当他打开笼子的时候，却发现这只老鼠不见了！他开始四处寻找，但是找不到老鼠的踪迹。他开始感到很沮丧，觉得自己可能做错了什么。
+
+就在这时，汤姆看到了他的好友——一只叫做杰克的猫。杰克告诉汤姆，他知道老鼠在哪里，但是汤姆必须答应他一件事情。如果汤姆能够帮助杰克捉住老鼠，他可以成为杰克的朋友。
+
+汤姆想了想，觉得这是一个机会。他答应杰克，如果他能捉住老鼠，他就会成为他的朋友。杰克同意了，他们开始合作，一起寻找老鼠。
+
+经过几天的努力，他们终于找到了老鼠。汤姆非常高兴，他决定让杰克成为他的朋友。杰克非常高兴，他们一起度过了愉快的时光。
+
+从那天起，汤姆和杰克成为了最好的朋友，他们一起玩耍，分享快乐和悲伤。这个故事告诉我们，友谊是一种宝贵的财富，只有真心对待朋友，才能获得真正的友谊。
+
+请输入提示: exit
+(lm) root@intern-studio-030876:~/lmdeploy# 
+```
+
+![](InternLM2_homework5.assets/transformers_run.png)
 
 ## 使用命令行方式与模型对话
 
@@ -135,7 +166,105 @@ lmdeploy chat \
     --backend turbomind
 ```
 
-![image-20240409111545285](InternLM2_homework5.assets/chat1.png)
+> 命令运行记录
+
+```sh
+(lm) root@intern-studio-030876:~/lmdeploy# lmdeploy chat \
+>     models/internlm2-chat-1_8b \
+>     --backend turbomind
+2024-04-13 18:16:26,536 - lmdeploy - WARNING - model_source: hf_model
+2024-04-13 18:16:26,538 - lmdeploy - WARNING - kwargs max_batch_size is deprecated to initialize model, use TurbomindEngineConfig instead.
+2024-04-13 18:16:26,538 - lmdeploy - WARNING - kwargs cache_max_entry_count is deprecated to initialize model, use TurbomindEngineConfig instead.
+2024-04-13 18:16:29,924 - lmdeploy - WARNING - model_config:
+
+[llama]
+model_name = internlm2
+tensor_para_size = 1
+head_num = 16
+kv_head_num = 8
+vocab_size = 92544
+num_layer = 24
+inter_size = 8192
+norm_eps = 1e-05
+attn_bias = 0
+start_id = 1
+end_id = 2
+session_len = 32776
+weight_type = bf16
+rotary_embedding = 128
+rope_theta = 1000000.0
+size_per_head = 128
+group_size = 0
+max_batch_size = 128
+max_context_token_num = 1
+step_length = 1
+cache_max_entry_count = 0.8
+cache_block_seq_len = 64
+cache_chunk_size = -1
+num_tokens_per_iter = 0
+max_prefill_iters = 1
+extra_tokens_per_iter = 0
+use_context_fmha = 1
+quant_policy = 0
+max_position_embeddings = 32768
+rope_scaling_factor = 0.0
+use_dynamic_ntk = 0
+use_logn_attn = 0
+
+
+2024-04-13 18:16:30,965 - lmdeploy - WARNING - get 195 model params
+2024-04-13 18:16:54,643 - lmdeploy - WARNING - Input chat template with model_name is None. Forcing to use internlm2                                                      
+[WARNING] gemm_config.in is not found; using default GEMM algo
+session 1
+
+double enter to end input >>> 请给我讲一个关于猫和老鼠的小故事
+
+<|im_start|>system
+You are an AI assistant whose name is InternLM (书生·浦语).
+- InternLM (书生·浦语) is a conversational language model that is developed by Shanghai AI Laboratory (上海人工智能实验室). It is designed to be helpful, honest, and harmless.
+- InternLM (书生·浦语) can understand and communicate fluently in the language chosen by the user such as English and 中文.
+<|im_end|>
+<|im_start|>user
+请给我讲一个关于猫和老鼠的小故事<|im_end|>
+<|im_start|>assistant
+ 2024-04-13 18:17:50,248 - lmdeploy - WARNING - kwargs ignore_eos is deprecated for inference, use GenerationConfig instead.
+2024-04-13 18:17:50,248 - lmdeploy - WARNING - kwargs random_seed is deprecated for inference, use GenerationConfig instead.
+当然，我很乐意给你讲一个关于猫和老鼠的小故事。
+
+从前，有一只非常聪明的老鼠和一只非常善于捉老鼠的猫。老鼠和猫的生活总是充满了乐趣和挑战。
+
+有一天，当老鼠发现猫的捕猎技巧时，它决定想出一种智慧的战略来对抗猫。老鼠决定将自己藏在一个非常安全的地方，等待猫的到来。当猫准备进入老鼠的藏身处时，老鼠突然跳出来，将猫的爪子弄得“嘎吱嘎吱”响。
+
+猫的肚子疼得不得了，它无法继续追捕老鼠。老鼠趁这个机会，迅速溜走，躲到了一个安全的地方。猫感到困惑和沮丧，它不知道发生了什么事。
+
+几天后，猫偶然发现了一个老鼠洞，发现老鼠早就离开了。猫感到非常失望，心想它一定是偷了别的老鼠的食物，然后才离开的。
+
+猫开始感到愤怒和沮丧。它开始用它的捕猎技巧来追捕老鼠，但不论它怎么努力，老鼠都总是能够逃脱猫的追击。
+
+渐渐地，猫渐渐失去了耐心。在老鼠的洞里，它感到非常孤独和无助。
+
+一天，老鼠看到了猫的困境，它决定帮助猫。老鼠告诉猫，它知道猫最喜欢的食物是鱼，所以它想出了一个巧妙的方法，让猫去抓鱼，然后自己就可以安全地吃饭了。
+
+猫听从了老鼠的建议，去抓鱼。但老鼠并没有让猫捉到鱼，它利用自己的灵活技巧，把猫拉回洞里，自己抓到了鱼。
+
+老鼠和猫从此一起享受美食和冒险，它们成为了好朋友，共同度过了许多美好的时光。
+
+这个故事告诉我们，智慧和耐心是战胜任何困难的关键。有时候，我们需要跳出自己的舒适区，去尝试新的事物。通过智慧和合作，我们可以实现更大的成功。
+
+double enter to end input >>> EXIT
+
+
+<|im_start|>user
+EXIT<|im_end|>
+<|im_start|>assistant
+ 对不起，我无法理解您的问题。如有其他问题，欢迎随时向我提问，我会在我能力范围内尽力为您解答。
+
+double enter to end input >>> exit
+
+(lm) root@intern-studio-030876:~/lmdeploy# 
+```
+
+![](InternLM2_homework5.assets/chat1.png)
 
 # 进阶作业
 
@@ -152,7 +281,9 @@ lmdeploy lite auto_awq \
   --work-dir models/internlm2-chat-1_8b-4bit
 ```
 
-![w4a16](InternLM2_homework5.assets/w4a16.png)
+> 命令运行记录
+
+![](InternLM2_homework5.assets/w4a16.png)
 
 ## KV Cache=0.4 W4A16 命令行
 
@@ -164,6 +295,95 @@ lmdeploy chat \
     --backend turbomind \
     --model-format awq \
     --cache-max-entry-count 0.4
+```
+
+> 命令运行记录
+
+```sh
+(lm) root@intern-studio-030876:~/lmdeploy# lmdeploy chat \
+>     models/internlm2-chat-1_8b-4bit \
+>     --backend turbomind \
+>     --model-format awq \
+>     --cache-max-entry-count 0.4
+2024-04-13 18:21:27,228 - lmdeploy - WARNING - model_source: hf_model
+2024-04-13 18:21:27,228 - lmdeploy - WARNING - kwargs model_format is deprecated to initialize model, use TurbomindEngineConfig instead.
+2024-04-13 18:21:27,228 - lmdeploy - WARNING - kwargs max_batch_size is deprecated to initialize model, use TurbomindEngineConfig instead.
+2024-04-13 18:21:27,228 - lmdeploy - WARNING - kwargs cache_max_entry_count is deprecated to initialize model, use TurbomindEngineConfig instead.
+2024-04-13 18:21:33,984 - lmdeploy - WARNING - model_config:
+
+[llama]
+model_name = internlm2
+tensor_para_size = 1
+head_num = 16
+kv_head_num = 8
+vocab_size = 92544
+num_layer = 24
+inter_size = 8192
+norm_eps = 1e-05
+attn_bias = 0
+start_id = 1
+end_id = 2
+session_len = 32776
+weight_type = int4
+rotary_embedding = 128
+rope_theta = 1000000.0
+size_per_head = 128
+group_size = 128
+max_batch_size = 128
+max_context_token_num = 1
+step_length = 1
+cache_max_entry_count = 0.4
+cache_block_seq_len = 64
+cache_chunk_size = -1
+num_tokens_per_iter = 0
+max_prefill_iters = 1
+extra_tokens_per_iter = 0
+use_context_fmha = 1
+quant_policy = 0
+max_position_embeddings = 32768
+rope_scaling_factor = 0.0
+use_dynamic_ntk = 0
+use_logn_attn = 0
+
+
+2024-04-13 18:21:35,171 - lmdeploy - WARNING - get 267 model params
+2024-04-13 18:22:14,979 - lmdeploy - WARNING - Input chat template with model_name is None. Forcing to use internlm2                                                      
+[WARNING] gemm_config.in is not found; using default GEMM algo
+session 1
+
+double enter to end input >>> 请给我讲一个关于猫和老鼠的小故事
+
+<|im_start|>system
+You are an AI assistant whose name is InternLM (书生·浦语).
+- InternLM (书生·浦语) is a conversational language model that is developed by Shanghai AI Laboratory (上海人工智能实验室). It is designed to be helpful, honest, and harmless.
+- InternLM (书生·浦语) can understand and communicate fluently in the language chosen by the user such as English and 中文.
+<|im_end|>
+<|im_start|>user
+请给我讲一个关于猫和老鼠的小故事<|im_end|>
+<|im_start|>assistant
+ 2024-04-13 18:24:11,517 - lmdeploy - WARNING - kwargs ignore_eos is deprecated for inference, use GenerationConfig instead.
+2024-04-13 18:24:11,517 - lmdeploy - WARNING - kwargs random_seed is deprecated for inference, use GenerationConfig instead.
+当然，可以为您分享一个经典的老鼠与猫的故事情节。
+
+从前，有一个小老鼠名叫汤姆（Tom），他住在一家小餐馆里。汤姆与厨师结下了一个不平凡的友谊，他经常向他展示自己精湛的切菜技术。他的技术甚至征服了餐馆老板米勒（Mr. Mills）的独裁。
+
+但有一天，米勒的太太莉莉（Lily）决定在餐厅举办一场盛大的庆生会，邀请汤姆分享她的庆祝宴席。汤姆很高兴能够向他的朋友展示他的刀工，但他的技术却因莉莉的到来而变得紧张起来。
+
+莉莉是一个聪明狡黠的女人，她知道汤姆对厨师有偏袒，因此她提出举办一场猫捉老鼠的闹剧来分散汤姆的注意力。莉莉提出，如果他们能够成功，她将奖励汤姆一个特别的礼物。
+
+汤姆接受了莉莉的提议，他很高兴能向他的朋友展示他的厨艺。他精心设计了一个猫捉老鼠的计划，并确保他和莉莉都有机会参与其中。
+
+汤姆和莉莉一起准备了食物，他们设下陷阱，等待老鼠的到来。而汤姆则摆好了他的切菜碗，准备享用这个他精心准备的庆生宴席。
+
+当莉莉和汤姆进入餐馆时，他们之间发生了激烈的猫捉老鼠的混乱。汤姆的刀工技巧令猫陷入他的陷阱之中，而莉莉则设计了一个巧妙的小猫陷阱，将她的小老鼠吸引到汤姆的切菜碗里。
+
+汤姆和莉莉的计划成功了，他们成功地捉到了一只温顺的老鼠，但他们也成为了朋友。汤姆意识到莉莉的聪明才智和莉莉对他的欣赏让他感到无比满足和快乐。他们开始一起烹饪美食，他们的友谊也变得更加坚固。
+
+从那一刻起，汤姆和莉莉成为了好朋友，汤姆用他的厨艺为莉莉的庆生宴提供了无数的惊喜和温暖。他们成为了一个聪明的猫和一个聪明的猫的故事。
+
+double enter to end input >>> exit
+
+(lm) root@intern-studio-030876:~/lmdeploy# 
 ```
 
 ![](InternLM2_homework5.assets/chat2.png)
@@ -202,7 +422,7 @@ lmdeploy serve api_client http://localhost:23333
 > 远程连接
 
 ```SH
-ssh -CNg -L 23333:127.0.0.1:23333 root@ssh.intern-ai.org.cn -p 42225
+ssh -CNg -L 23333:127.0.0.1:23333 root@ssh.intern-ai.org.cn -p 40165
 ```
 
 > 访问 `127.0.0.1:23333`
@@ -290,7 +510,7 @@ lmdeploy serve gradio \
 > 远程连接
 
 ```sh
-ssh -CNg -L 6006:127.0.0.1:6006 root@ssh.intern-ai.org.cn -p 42225
+ssh -CNg -L 6006:127.0.0.1:6006 root@ssh.intern-ai.org.cn -p 40165
 ```
 
 > 访问 `127.0.0.1:6006`
@@ -379,7 +599,7 @@ if __name__ == '__main__':
         print()
 ```
 
-> 运行
+> 运行命令记录
 
 ```sh
 > python turbomind_pipeline.py
@@ -426,7 +646,7 @@ response = pipe(('describe this image', image))
 print(response)
 ```
 
-> 运行
+> 运行命令记录
 
 ```sh
 > python pipeline_llava.py 
@@ -471,7 +691,7 @@ demo.launch()
 > 远程连接
 
 ```sh
-ssh -CNg -L 7860:127.0.0.1:7860 root@ssh.intern-ai.org.cn -p 42225
+ssh -CNg -L 7860:127.0.0.1:7860 root@ssh.intern-ai.org.cn -p 40165 
 ```
 
 > 访问 `127.0.0.1:7860`

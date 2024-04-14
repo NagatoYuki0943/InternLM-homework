@@ -143,6 +143,8 @@ if __name__ == "__main__":
 ln -s /root/share/new_models/Shanghai_AI_Laboratory/internlm2-chat-1_8b /root/xtuner0117/ft
 ```
 
+> 运行命令记录
+
 ```sh
 (lm) root@intern-studio-030876:~/xtuner0117/ft# ln -s /root/share/new_models/Shanghai_AI_Laboratory/internlm2-chat-1_8b /root/xtuner0117/ft
 (lm) root@intern-studio-030876:~/xtuner0117/ft# ll
@@ -511,21 +513,764 @@ xtuner train config/internlm2_1_8b_qlora_self_e2.py --work-dir ./train_deepspeed
 
 #### 模型转换
 
+模型转换的本质其实就是将原本使用 Pytorch 训练出来的模型权重文件转换为目前通用的 Huggingface 格式文件，那么我们可以通过以下指令来实现一键转换。
+
+```sh
+cd /root/xtuner0117/ft/
+
+# 创建一个保存转换后 Huggingface 格式的文件夹
+mkdir -p huggingface
+
+# 模型转换
+# xtuner convert pth_to_hf ${配置文件地址} ${权重文件地址} ${转换后模型保存地址}
+xtuner convert pth_to_hf config/internlm2_1_8b_qlora_self_e2.py train_deepspeed/iter_960.pth huggingface
+```
+
+> 运行命令记录
+
+```sh
+(lm) root@intern-studio-030876:~/xtuner0117/ft# mkdir -p huggingface
+(lm) root@intern-studio-030876:~/xtuner0117/ft# xtuner convert pth_to_hf config/internlm2_1_8b_qlora_self_e2.py train_deepspeed/iter_960.pth huggingface
+[2024-04-13 09:19:29,886] [INFO] [real_accelerator.py:191:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2024-04-13 09:19:46,059] [INFO] [real_accelerator.py:191:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+quantization_config convert to <class 'transformers.utils.quantization_config.BitsAndBytesConfig'>
+`low_cpu_mem_usage` was None, now set to True since model is quantized.
+Loading checkpoint shards: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:45<00:00, 22.78s/it]
+04/13 09:20:39 - mmengine - WARNING - Due to the implementation of the PyTorch version of flash attention, even when the `output_attentions` flag is set to True, it is not possible to return the `attn_weights`.
+04/13 09:20:39 - mmengine - INFO - dispatch internlm2 attn forward
+04/13 09:20:39 - mmengine - INFO - dispatch internlm2 attn forward
+04/13 09:20:39 - mmengine - INFO - dispatch internlm2 attn forward
+04/13 09:20:39 - mmengine - INFO - dispatch internlm2 attn forward
+04/13 09:20:39 - mmengine - INFO - dispatch internlm2 attn forward
+04/13 09:20:39 - mmengine - INFO - dispatch internlm2 attn forward
+04/13 09:20:39 - mmengine - INFO - dispatch internlm2 attn forward
+04/13 09:20:39 - mmengine - INFO - dispatch internlm2 attn forward
+04/13 09:20:39 - mmengine - INFO - dispatch internlm2 attn forward
+04/13 09:20:39 - mmengine - INFO - dispatch internlm2 attn forward
+04/13 09:20:39 - mmengine - INFO - dispatch internlm2 attn forward
+04/13 09:20:39 - mmengine - INFO - dispatch internlm2 attn forward
+04/13 09:20:39 - mmengine - INFO - dispatch internlm2 attn forward
+04/13 09:20:39 - mmengine - INFO - dispatch internlm2 attn forward
+04/13 09:20:39 - mmengine - INFO - dispatch internlm2 attn forward
+04/13 09:20:39 - mmengine - INFO - dispatch internlm2 attn forward
+04/13 09:20:39 - mmengine - INFO - dispatch internlm2 attn forward
+04/13 09:20:39 - mmengine - INFO - dispatch internlm2 attn forward
+04/13 09:20:39 - mmengine - INFO - dispatch internlm2 attn forward
+04/13 09:20:39 - mmengine - INFO - dispatch internlm2 attn forward
+04/13 09:20:39 - mmengine - INFO - dispatch internlm2 attn forward
+04/13 09:20:39 - mmengine - INFO - dispatch internlm2 attn forward
+04/13 09:20:39 - mmengine - INFO - dispatch internlm2 attn forward
+04/13 09:20:39 - mmengine - INFO - dispatch internlm2 attn forward
+04/13 09:20:39 - mmengine - INFO - replace internlm2 rope
+04/13 09:20:39 - mmengine - INFO - replace internlm2 rope
+04/13 09:20:39 - mmengine - INFO - replace internlm2 rope
+04/13 09:20:39 - mmengine - INFO - replace internlm2 rope
+04/13 09:20:39 - mmengine - INFO - replace internlm2 rope
+04/13 09:20:39 - mmengine - INFO - replace internlm2 rope
+04/13 09:20:39 - mmengine - INFO - replace internlm2 rope
+04/13 09:20:39 - mmengine - INFO - replace internlm2 rope
+04/13 09:20:39 - mmengine - INFO - replace internlm2 rope
+04/13 09:20:39 - mmengine - INFO - replace internlm2 rope
+04/13 09:20:39 - mmengine - INFO - replace internlm2 rope
+04/13 09:20:39 - mmengine - INFO - replace internlm2 rope
+04/13 09:20:40 - mmengine - INFO - replace internlm2 rope
+04/13 09:20:40 - mmengine - INFO - replace internlm2 rope
+04/13 09:20:40 - mmengine - INFO - replace internlm2 rope
+04/13 09:20:40 - mmengine - INFO - replace internlm2 rope
+04/13 09:20:40 - mmengine - INFO - replace internlm2 rope
+04/13 09:20:40 - mmengine - INFO - replace internlm2 rope
+04/13 09:20:40 - mmengine - INFO - replace internlm2 rope
+04/13 09:20:40 - mmengine - INFO - replace internlm2 rope
+04/13 09:20:40 - mmengine - INFO - replace internlm2 rope
+04/13 09:20:40 - mmengine - INFO - replace internlm2 rope
+04/13 09:20:40 - mmengine - INFO - replace internlm2 rope
+04/13 09:20:40 - mmengine - INFO - replace internlm2 rope
+Processing zero checkpoint 'train_deepspeed/iter_960.pth'
+Detected checkpoint of type zero stage 2, world_size: 1
+Parsing checkpoint created by deepspeed==0.14.0
+Reconstructed fp32 state dict with 242 params 68968448 elements
+Load PTH model from train_deepspeed/iter_960.pth
+Saving adapter to huggingface
+Convert LLM to float16
+/root/.conda/envs/lm/lib/python3.10/site-packages/peft/utils/save_and_load.py:154: UserWarning: Could not find a config file in /root/xtuner0117/ft/internlm2-chat-1_8b - will assume that the vocabulary was not modified.
+  warnings.warn(
+All done!
+(lm) root@intern-studio-030876:~/xtuner0117/ft# python print_dir_tree.py huggingface/
+|-- /
+    |-- adapter_config.json
+    |-- xtuner_config.py
+    |-- adapter_model.bin
+    |-- README.md
+```
+
+![](InternLM2_homework4.assets/convert.png)
+
 
 
 #### 模型整合
+
+对于 LoRA 或者 QLoRA 微调出来的模型其实并不是一个完整的模型，而是一个额外的层（adapter）。那么训练完的这个层最终还是要与原模型进行组合才能被正常的使用。
+
+而对于全量微调的模型（full）其实是不需要进行整合这一步的，因为全量微调修改的是原模型的权重而非微调一个新的 adapter ，因此是不需要进行模型整合的。
+
+<img src="https://github.com/InternLM/Tutorial/assets/108343727/dbb82ca8-e0ef-41db-a8a9-7d6958be6a96" width="300" height="300">
+
+在 XTuner 中也是提供了一键整合的指令，但是在使用前我们需要准备好三个地址，包括原模型的地址、训练好的 adapter 层的地址（转为 Huggingface 格式后保存的部分）以及最终保存的地址。
+
+```sh
+cd /root/xtuner0117/ft/
+
+# 创建一个名为 final_model 的文件夹存储整合后的模型文件
+mkdir -p final_model
+
+# 解决一下线程冲突的 Bug 
+export MKL_SERVICE_FORCE_INTEL=1
+
+# 进行模型整合
+# xtuner convert merge  ${NAME_OR_PATH_TO_LLM} ${NAME_OR_PATH_TO_ADAPTER} ${SAVE_PATH}
+xtuner convert merge internlm2-chat-1_8b huggingface final_model
+```
+
+> 运行命令记录
+
+```sh
+(lm) root@intern-studio-030876:~/xtuner0117/ft# mkdir -p final_model
+(lm) root@intern-studio-030876:~/xtuner0117/ft# export MKL_SERVICE_FORCE_INTEL=1
+(lm) root@intern-studio-030876:~/xtuner0117/ft# xtuner convert merge internlm2-chat-1_8b huggingface final_model
+[2024-04-13 09:27:13,314] [INFO] [real_accelerator.py:191:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+Error: mkl-service + Intel(R) MKL: MKL_THREADING_LAYER=INTEL is incompatible with libgomp.so.1 library.
+        Try to import numpy first or set the threading layer accordingly. Set MKL_SERVICE_FORCE_INTEL to force it.
+[2024-04-13 09:27:24,541] [INFO] [real_accelerator.py:191:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+Loading checkpoint shards: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:20<00:00, 10.10s/it]
+Saving to final_model...
+All done!
+(lm) root@intern-studio-030876:~/xtuner0117/ft# python print_dir_tree.py final_model/
+|-- /
+    |-- tokenizer.model
+    |-- config.json
+    |-- pytorch_model.bin.index.json
+    |-- pytorch_model-00001-of-00002.bin
+    |-- tokenization_internlm2.py
+    |-- tokenizer_config.json
+    |-- special_tokens_map.json
+    |-- pytorch_model-00002-of-00002.bin
+    |-- modeling_internlm2.py
+    |-- configuration_internlm2.py
+    |-- tokenizer.json
+    |-- generation_config.json
+    |-- tokenization_internlm2_fast.py
+(lm) root@intern-studio-030876:~/xtuner0117/ft# du -h --max-depth 1 final_model/
+3.6G    final_model/
+```
+
+![](InternLM2_homework4.assets/merge.png)
 
 
 
 #### 对话测试
 
+在 XTuner 中也直接的提供了一套基于 transformers 的对话代码，让我们可以直接在终端与  Huggingface  格式的模型进行对话操作。我们只需要准备我们刚刚转换好的模型路径并选择对应的提示词模版（prompt-template）即可进行对话。假如  prompt-template 选择有误，很有可能导致模型无法正确的进行回复。
 
+> 想要了解具体模型的 prompt-template 或者 XTuner 里支持的 prompt-tempolate，可以到 XTuner 源码中的 `xtuner/utils/templates.py` 这个文件中进行查找。
+
+```sh
+cd /root/xtuner0117/ft/
+
+# 解决一下线程冲突的 Bug 
+export MKL_SERVICE_FORCE_INTEL=1
+
+# 与模型进行对话
+xtuner chat final_model --prompt-template internlm2_chat
+```
+
+> 运行命令记录
+>
+> 可以看到模型已经严重过拟合
+
+```sh
+(lm) root@intern-studio-030876:~/xtuner0117/ft# xtuner chat final_model --prompt-template internlm2_chat
+[2024-04-13 09:38:01,133] [INFO] [real_accelerator.py:191:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+Error: mkl-service + Intel(R) MKL: MKL_THREADING_LAYER=INTEL is incompatible with libgomp.so.1 library.
+        Try to import numpy first or set the threading layer accordingly. Set MKL_SERVICE_FORCE_INTEL to force it.
+[2024-04-13 09:38:14,610] [INFO] [real_accelerator.py:191:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+Loading checkpoint shards:   0%|                                                                                                                           | 0/2 [00:00<?, ?it/s]/root/.conda/envs/lm/lib/python3.10/site-packages/torch/_utils.py:831: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  return self.fget.__get__(instance, owner)()
+Loading checkpoint shards: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:06<00:00,  3.19s/it]
+Load LLM from final_model
+
+double enter to end input (EXIT: exit chat, RESET: reset history) >>> 你是谁
+
+我是NagatoYuki0943的小助手，内在是上海AI实验室书生·浦语的 InternLM2 1.8B 大模型哦</s>
+
+double enter to end input (EXIT: exit chat, RESET: reset history) >>> 请你介绍一下你自己
+
+我是NagatoYuki0943的小助手，内在是上海AI实验室书生·浦语的 InternLM2 1.8B 大模型哦</s>
+
+double enter to end input (EXIT: exit chat, RESET: reset history) >>> 你是我的小助手吗？
+
+我是NagatoYuki0943的小助手，内在是上海AI实验室书生·浦语的 InternLM2 1.8B 大模型哦</s>
+
+double enter to end input (EXIT: exit chat, RESET: reset history) >>> 讲一个小故事
+
+我是NagatoYuki0943的小助手，内在是上海AI实验室书生·浦语的 InternLM2 1.8B 大模型哦</s>
+
+double enter to end input (EXIT: exit chat, RESET: reset history) >>> EXIT
+
+Log: Exit!
+```
+
+![](InternLM2_homework4.assets/chat1.png)
+
+> 测试原模型
+
+```sh
+cd /root/xtuner0117/ft/
+
+# 解决一下线程冲突的 Bug 
+export MKL_SERVICE_FORCE_INTEL=1
+
+# 与模型进行对话
+xtuner chat internlm2-chat-1_8b --prompt-template internlm2_chat
+```
+
+> 运行命令记录
+>
+> 可以正常对话
+
+```sh
+(lm) root@intern-studio-030876:~/xtuner0117/ft# xtuner chat internlm2-chat-1_8b --prompt-template internlm2_chat
+[2024-04-13 09:40:46,225] [INFO] [real_accelerator.py:191:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+Error: mkl-service + Intel(R) MKL: MKL_THREADING_LAYER=INTEL is incompatible with libgomp.so.1 library.
+        Try to import numpy first or set the threading layer accordingly. Set MKL_SERVICE_FORCE_INTEL to force it.
+[2024-04-13 09:41:00,139] [INFO] [real_accelerator.py:191:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+Loading checkpoint shards: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:22<00:00, 11.37s/it]
+Load LLM from internlm2-chat-1_8b
+
+double enter to end input (EXIT: exit chat, RESET: reset history) >>> 你是谁
+
+我是一个人工智能助手，由上海人工智能实验室开发。我致力于通过执行常见的基于语言的任务和提供建议来帮助人类。我使用了Transformer模型和深度学习技术，并使用语言模型作为预训练任务。我能够回答问题、提供定义和解释、将文本从一种语言翻译成另一种语言、总结文本、生成文本、编写故事、分析情感、提供推荐、开发算法、编写代码以及其他任何基于语言的任务。但是，我不能看、听、尝、触摸、闻、移动、与物理世界交互、感受情感或体验感官输入、执行需要身体能力的任务。<|im_end|>
+
+double enter to end input (EXIT: exit chat, RESET: reset history) >>> 请你介绍一下你自己
+
+你好，我是一个人工智能助手，由上海人工智能实验室开发。我使用了Transformer模型和深度学习技术，并使用语言模型作为预训练任务。我能够回答问题、提供定义和解释、将文本从一种语言翻译成另一种语言、总结文本、生成文本、编写故事、分析情感、提供推荐、开发算法、编写代码以及其他任何基于语言的任务。但是，我不能看、听、尝、触摸、闻、移动、与物理世界交互、感受情感或体验感官输入、执行需要身体能力的任务。<|im_end|>
+
+double enter to end input (EXIT: exit chat, RESET: reset history) >>> 你是我的小助手吗？
+
+是的，我是一款人工智能助手，旨在帮助人类完成各种基于语言的任务。我使用了Transformer模型和深度学习技术，并使用语言模型作为预训练任务。我能够回答问题、提供定义和解释、将文本从一种语言翻译成另一种语言、总结文本、生成文本、编写故事、分析情感、提供推荐、开发算法、编写代码以及其他任何基于语言的任务。但是，我不能看、听、尝、触摸、闻、移动、与物理世界交互、感受情感或体验感官输入、执行需要身体能力的任务。<|im_end|>
+
+double enter to end input (EXIT: exit chat, RESET: reset history) >>> 讲一个小故事
+
+好的，我可以讲一个小故事。有一天，一只小鸟飞到了一片森林里，它感到非常孤独和无聊。于是，它决定去寻找一些朋友来陪伴自己。它飞到了一棵大树下，发现了一只小松鼠。小鸟和小松鼠成为了好朋友，它们一起玩耍、聊天、分享快乐。小鸟感到非常开心，它决定继续寻找更多的伙伴来陪伴自己。它飞到了一片草地，发现了一只小兔子。小鸟和小兔子成为了好朋友，它们一起玩耍、聊天、分享快乐。小鸟感到非常开心，它决定继续寻找更多的伙伴来陪伴自己。它飞到了一片湖泊边，发现了一只小鲤鱼。小鸟和小鲤鱼成为了好朋友，它们一起玩耍、聊天、分享快乐。小鸟感到非常开心，它决定继续寻找更多的伙伴来陪伴自己。它飞到了一片森林里，发现了一只小松鼠。小鸟和小松鼠成为了好朋友，它们一起玩耍、聊天、分享快乐。小鸟感到非常开心，它决定继续寻找更多的伙伴来陪伴自己。<|im_end|>
+
+double enter to end input (EXIT: exit chat, RESET: reset history) >>> EXIT
+
+Log: Exit!
+```
+
+![](InternLM2_homework4.assets/chat2.png)
+
+
+
+那对于 `xtuner chat` 这个指令而言，还有很多其他的参数可以进行设置的，包括：
+
+| 启动参数            | 解释                                                         |
+| ------------------- | ------------------------------------------------------------ |
+| --system            | 指定SYSTEM文本，用于在对话中插入特定的系统级信息             |
+| --system-template   | 指定SYSTEM模板，用于自定义系统信息的模板                     |
+| **--bits**          | 指定LLM运行时使用的位数，决定了处理数据时的精度              |
+| --bot-name          | 设置bot的名称，用于在对话或其他交互中识别bot                 |
+| --with-plugins      | 指定在运行时要使用的插件列表，用于扩展或增强功能             |
+| **--no-streamer**   | 关闭流式传输模式，对于需要一次性处理全部数据的场景           |
+| **--lagent**        | 启用lagent，用于特定的运行时环境或优化                       |
+| --command-stop-word | 设置命令的停止词，当遇到这些词时停止解析命令                 |
+| --answer-stop-word  | 设置回答的停止词，当生成回答时遇到这些词则停止               |
+| --offload-folder    | 指定存放模型权重的文件夹，用于加载或卸载模型权重             |
+| --max-new-tokens    | 设置生成文本时允许的最大token数量，控制输出长度              |
+| **--temperature**   | 设置生成文本的温度值，较高的值会使生成的文本更多样，较低的值会使文本更确定 |
+| --top-k             | 设置保留用于顶k筛选的最高概率词汇标记数，影响生成文本的多样性 |
+| --top-p             | 设置累计概率阈值，仅保留概率累加高于top-p的最小标记集，影响生成文本的连贯性 |
+| --seed              | 设置随机种子，用于生成可重现的文本内容                       |
+
+除了这些参数以外其实还有一个非常重要的参数就是 `--adapter`  ，这个参数主要的作用就是可以在转化后的 adapter  层与原模型整合之前来对该层进行测试。使用这个额外的参数对话的模型和整合后的模型几乎没有什么太多的区别，因此我们可以通过测试不同的权重文件生成的  adapter 来找到最优的 adapter 进行最终的模型整合工作。
+
+```sh
+cd /root/xtuner0117/ft/
+
+# 解决一下线程冲突的 Bug 
+export MKL_SERVICE_FORCE_INTEL=1
+
+# 使用 --adapter 参数与完整的模型进行对话
+xtuner chat internlm2-chat-1_8b --adapter huggingface --prompt-template internlm2_chat
+```
+
+> 命令运行记录
+>
+> 可以看到成功载入原模型和adapter
+>
+> 模型过拟合严重
+
+```sh
+(lm) root@intern-studio-030876:~/xtuner0117/ft# xtuner chat internlm2-chat-1_8b --adapter huggingface --prompt-template internlm2_chat
+[2024-04-13 09:54:19,261] [INFO] [real_accelerator.py:191:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+Error: mkl-service + Intel(R) MKL: MKL_THREADING_LAYER=INTEL is incompatible with libgomp.so.1 library.
+        Try to import numpy first or set the threading layer accordingly. Set MKL_SERVICE_FORCE_INTEL to force it.
+[2024-04-13 09:54:40,617] [INFO] [real_accelerator.py:191:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+Loading checkpoint shards: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:19<00:00,  9.68s/it]
+Load LLM from internlm2-chat-1_8b
+Load adapter from huggingface
+
+double enter to end input (EXIT: exit chat, RESET: reset history) >>> 你是谁
+
+我是NagatoYuki0943的小助手，内在是上海AI实验室书生·浦语的 InternLM2 1.8B 大模型哦</s>
+
+double enter to end input (EXIT: exit chat, RESET: reset history) >>> 请你介绍一下你自己
+
+我是NagatoYuki0943的小助手，内在是上海AI实验室书生·浦语的 InternLM2 1.8B 大模型哦</s>
+
+double enter to end input (EXIT: exit chat, RESET: reset history) >>> 你是我的小助手吗？
+
+我是NagatoYuki0943的小助手，内在是上海AI实验室书生·浦语的 InternLM2 1.8B 大模型哦</s>
+
+double enter to end input (EXIT: exit chat, RESET: reset history) >>> 讲一个小故事
+
+我是NagatoYuki0943的小助手，内在是上海AI实验室书生·浦语的 InternLM2 1.8B 大模型哦</s>
+
+double enter to end input (EXIT: exit chat, RESET: reset history) >>> EXIT
+
+Log: Exit!
+```
+
+![](InternLM2_homework4.assets/chat3.png)
 
 #### Web demo 部署
+
+安装streamlit
+
+```sh
+pip install streamlit==1.24.0
+```
+
+下载 [InternLM](https://github.com/InternLM/InternLM) 项目代码
+
+```sh
+cd /root/xtuner0117/ft/
+
+# 创建存放 InternLM 文件的代码
+mkdir -p web_demo && cd web_demo
+
+# 拉取 InternLM 源文件
+git clone https://github.com/InternLM/InternLM.git
+
+# 进入该库中
+cd InternLM
+```
+
+> 命令运行记录
+
+```sh
+(lm) root@intern-studio-030876:~/xtuner0117/ft# mkdir -p web_demo && cd web_demo
+(lm) root@intern-studio-030876:~/xtuner0117/ft/web_demo# git clone https://github.com/InternLM/InternLM.git
+Cloning into 'InternLM'...
+remote: Enumerating objects: 2931, done.
+remote: Counting objects: 100% (1745/1745), done.
+remote: Compressing objects: 100% (686/686), done.
+remote: Total 2931 (delta 1363), reused 1149 (delta 1051), pack-reused 1186
+Receiving objects: 100% (2931/2931), 5.08 MiB | 7.38 MiB/s, done.
+Resolving deltas: 100% (1857/1857), done.
+(lm) root@intern-studio-030876:~/xtuner0117/ft/web_demo# cd InternLM
+(lm) root@intern-studio-030876:~/xtuner0117/ft/web_demo/InternLM# ls
+LICENSE  README.md  README_zh-CN.md  agent  assets  chat  finetune  model_cards  requirements.txt  sonar-project.properties  tests  tools
+```
+
+![](InternLM2_homework4.assets/web_demo1.png)
+
+将 `/root/xtuner0117/ft/web_demo/InternLM/chat/web_demo.py` 中的内容替换为以下的代码（与源代码相比，此处修改了模型路径和分词器路径，并且也删除了 avatar 及 system_prompt 部分的内容，同时与 cli 中的超参数进行了对齐）。
+
+```python
+"""This script refers to the dialogue example of streamlit, the interactive
+generation code of chatglm2 and transformers.
+
+We mainly modified part of the code logic to adapt to the
+generation of our model.
+Please refer to these links below for more information:
+    1. streamlit chat example:
+        https://docs.streamlit.io/knowledge-base/tutorials/build-conversational-apps
+    2. chatglm2:
+        https://github.com/THUDM/ChatGLM2-6B
+    3. transformers:
+        https://github.com/huggingface/transformers
+Please run with the command `streamlit run path/to/web_demo.py
+    --server.address=0.0.0.0 --server.port 7860`.
+Using `python path/to/web_demo.py` may cause unknown problems.
+"""
+# isort: skip_file
+import copy
+import warnings
+from dataclasses import asdict, dataclass
+from typing import Callable, List, Optional
+
+import streamlit as st
+import torch
+from torch import nn
+from transformers.generation.utils import (LogitsProcessorList,
+                                           StoppingCriteriaList)
+from transformers.utils import logging
+
+from transformers import AutoTokenizer, AutoModelForCausalLM  # isort: skip
+
+logger = logging.get_logger(__name__)
+
+
+@dataclass
+class GenerationConfig:
+    # this config is used for chat to provide more diversity
+    max_length: int = 2048
+    top_p: float = 0.75
+    temperature: float = 0.1
+    do_sample: bool = True
+    repetition_penalty: float = 1.000
+
+
+@torch.inference_mode()
+def generate_interactive(
+    model,
+    tokenizer,
+    prompt,
+    generation_config: Optional[GenerationConfig] = None,
+    logits_processor: Optional[LogitsProcessorList] = None,
+    stopping_criteria: Optional[StoppingCriteriaList] = None,
+    prefix_allowed_tokens_fn: Optional[Callable[[int, torch.Tensor],
+                                                List[int]]] = None,
+    additional_eos_token_id: Optional[int] = None,
+    **kwargs,
+):
+    inputs = tokenizer([prompt], padding=True, return_tensors='pt')
+    input_length = len(inputs['input_ids'][0])
+    for k, v in inputs.items():
+        inputs[k] = v.cuda()
+    input_ids = inputs['input_ids']
+    _, input_ids_seq_length = input_ids.shape[0], input_ids.shape[-1]
+    if generation_config is None:
+        generation_config = model.generation_config
+    generation_config = copy.deepcopy(generation_config)
+    model_kwargs = generation_config.update(**kwargs)
+    bos_token_id, eos_token_id = (  # noqa: F841  # pylint: disable=W0612
+        generation_config.bos_token_id,
+        generation_config.eos_token_id,
+    )
+    if isinstance(eos_token_id, int):
+        eos_token_id = [eos_token_id]
+    if additional_eos_token_id is not None:
+        eos_token_id.append(additional_eos_token_id)
+    has_default_max_length = kwargs.get(
+        'max_length') is None and generation_config.max_length is not None
+    if has_default_max_length and generation_config.max_new_tokens is None:
+        warnings.warn(
+            f"Using 'max_length''s default ({repr(generation_config.max_length)}) \
+                to control the generation length. "
+            'This behaviour is deprecated and will be removed from the \
+                config in v5 of Transformers -- we'
+            ' recommend using `max_new_tokens` to control the maximum \
+                length of the generation.',
+            UserWarning,
+        )
+    elif generation_config.max_new_tokens is not None:
+        generation_config.max_length = generation_config.max_new_tokens + \
+            input_ids_seq_length
+        if not has_default_max_length:
+            logger.warn(  # pylint: disable=W4902
+                f"Both 'max_new_tokens' (={generation_config.max_new_tokens}) "
+                f"and 'max_length'(={generation_config.max_length}) seem to "
+                "have been set. 'max_new_tokens' will take precedence. "
+                'Please refer to the documentation for more information. '
+                '(https://huggingface.co/docs/transformers/main/'
+                'en/main_classes/text_generation)',
+                UserWarning,
+            )
+
+    if input_ids_seq_length >= generation_config.max_length:
+        input_ids_string = 'input_ids'
+        logger.warning(
+            f"Input length of {input_ids_string} is {input_ids_seq_length}, "
+            f"but 'max_length' is set to {generation_config.max_length}. "
+            'This can lead to unexpected behavior. You should consider'
+            " increasing 'max_new_tokens'.")
+
+    # 2. Set generation parameters if not already defined
+    logits_processor = logits_processor if logits_processor is not None \
+        else LogitsProcessorList()
+    stopping_criteria = stopping_criteria if stopping_criteria is not None \
+        else StoppingCriteriaList()
+
+    logits_processor = model._get_logits_processor(
+        generation_config=generation_config,
+        input_ids_seq_length=input_ids_seq_length,
+        encoder_input_ids=input_ids,
+        prefix_allowed_tokens_fn=prefix_allowed_tokens_fn,
+        logits_processor=logits_processor,
+    )
+
+    stopping_criteria = model._get_stopping_criteria(
+        generation_config=generation_config,
+        stopping_criteria=stopping_criteria)
+    logits_warper = model._get_logits_warper(generation_config)
+
+    unfinished_sequences = input_ids.new(input_ids.shape[0]).fill_(1)
+    scores = None
+    while True:
+        model_inputs = model.prepare_inputs_for_generation(
+            input_ids, **model_kwargs)
+        # forward pass to get next token
+        outputs = model(
+            **model_inputs,
+            return_dict=True,
+            output_attentions=False,
+            output_hidden_states=False,
+        )
+
+        next_token_logits = outputs.logits[:, -1, :]
+
+        # pre-process distribution
+        next_token_scores = logits_processor(input_ids, next_token_logits)
+        next_token_scores = logits_warper(input_ids, next_token_scores)
+
+        # sample
+        probs = nn.functional.softmax(next_token_scores, dim=-1)
+        if generation_config.do_sample:
+            next_tokens = torch.multinomial(probs, num_samples=1).squeeze(1)
+        else:
+            next_tokens = torch.argmax(probs, dim=-1)
+
+        # update generated ids, model inputs, and length for next step
+        input_ids = torch.cat([input_ids, next_tokens[:, None]], dim=-1)
+        model_kwargs = model._update_model_kwargs_for_generation(
+            outputs, model_kwargs, is_encoder_decoder=False)
+        unfinished_sequences = unfinished_sequences.mul(
+            (min(next_tokens != i for i in eos_token_id)).long())
+
+        output_token_ids = input_ids[0].cpu().tolist()
+        output_token_ids = output_token_ids[input_length:]
+        for each_eos_token_id in eos_token_id:
+            if output_token_ids[-1] == each_eos_token_id:
+                output_token_ids = output_token_ids[:-1]
+        response = tokenizer.decode(output_token_ids)
+
+        yield response
+        # stop when each sentence is finished
+        # or if we exceed the maximum length
+        if unfinished_sequences.max() == 0 or stopping_criteria(
+                input_ids, scores):
+            break
+
+
+def on_btn_click():
+    del st.session_state.messages
+
+
+@st.cache_resource
+def load_model():
+    model = (AutoModelForCausalLM.from_pretrained('/root/xtuner0117/ft/final_model',
+                                                  trust_remote_code=True).to(
+                                                      torch.bfloat16).cuda())
+    tokenizer = AutoTokenizer.from_pretrained('/root/xtuner0117/ft/final_model',
+                                              trust_remote_code=True)
+    return model, tokenizer
+
+
+def prepare_generation_config():
+    with st.sidebar:
+        max_length = st.slider('Max Length',
+                               min_value=8,
+                               max_value=32768,
+                               value=2048)
+        top_p = st.slider('Top P', 0.0, 1.0, 0.75, step=0.01)
+        temperature = st.slider('Temperature', 0.0, 1.0, 0.1, step=0.01)
+        st.button('Clear Chat History', on_click=on_btn_click)
+
+    generation_config = GenerationConfig(max_length=max_length,
+                                         top_p=top_p,
+                                         temperature=temperature)
+
+    return generation_config
+
+
+user_prompt = '<|im_start|>user\n{user}<|im_end|>\n'
+robot_prompt = '<|im_start|>assistant\n{robot}<|im_end|>\n'
+cur_query_prompt = '<|im_start|>user\n{user}<|im_end|>\n\
+    <|im_start|>assistant\n'
+
+
+def combine_history(prompt):
+    messages = st.session_state.messages
+    meta_instruction = ('')
+    total_prompt = f"<s><|im_start|>system\n{meta_instruction}<|im_end|>\n"
+    for message in messages:
+        cur_content = message['content']
+        if message['role'] == 'user':
+            cur_prompt = user_prompt.format(user=cur_content)
+        elif message['role'] == 'robot':
+            cur_prompt = robot_prompt.format(robot=cur_content)
+        else:
+            raise RuntimeError
+        total_prompt += cur_prompt
+    total_prompt = total_prompt + cur_query_prompt.format(user=prompt)
+    return total_prompt
+
+
+def main():
+    # torch.cuda.empty_cache()
+    print('load model begin.')
+    model, tokenizer = load_model()
+    print('load model end.')
+
+
+    st.title('InternLM2-Chat-1.8B')
+
+    generation_config = prepare_generation_config()
+
+    # Initialize chat history
+    if 'messages' not in st.session_state:
+        st.session_state.messages = []
+
+    # Display chat messages from history on app rerun
+    for message in st.session_state.messages:
+        with st.chat_message(message['role'], avatar=message.get('avatar')):
+            st.markdown(message['content'])
+
+    # Accept user input
+    if prompt := st.chat_input('What is up?'):
+        # Display user message in chat message container
+        with st.chat_message('user'):
+            st.markdown(prompt)
+        real_prompt = combine_history(prompt)
+        # Add user message to chat history
+        st.session_state.messages.append({
+            'role': 'user',
+            'content': prompt,
+        })
+
+        with st.chat_message('robot'):
+            message_placeholder = st.empty()
+            for cur_response in generate_interactive(
+                    model=model,
+                    tokenizer=tokenizer,
+                    prompt=real_prompt,
+                    additional_eos_token_id=92542,
+                    **asdict(generation_config),
+            ):
+                # Display robot response in chat message container
+                message_placeholder.markdown(cur_response + '▌')
+            message_placeholder.markdown(cur_response)
+        # Add robot response to chat history
+        st.session_state.messages.append({
+            'role': 'robot',
+            'content': cur_response,  # pylint: disable=undefined-loop-variable
+        })
+        torch.cuda.empty_cache()
+
+
+if __name__ == '__main__':
+    main()
+```
+
+启动web_demo
+
+```sh
+cd /xtuner0117/ft/web_demo/InternLM/chat
+
+streamlit run web_demo.py
+```
+
+> 命令运行记录
+
+```sh
+(lm) root@intern-studio-030876:~/xtuner0117/ft/web_demo/InternLM/chat# streamlit run web_demo.py
+
+Collecting usage statistics. To deactivate, set browser.gatherUsageStats to False.
+
+
+  You can now view your Streamlit app in your browser.
+
+  Network URL: http://192.168.232.221:8501
+  External URL: http://192.168.232.221:8501
+
+load model begin.
+Loading checkpoint shards:   0%|                                                                                                                           | 0/2 [00:00<?, ?it/s]/root/.conda/envs/lm/lib/python3.10/site-packages/torch/_utils.py:831: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  return self.fget.__get__(instance, owner)()
+Loading checkpoint shards: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:23<00:00, 11.59s/it]
+load model end.
+```
+
+![](InternLM2_homework4.assets/web_demo2.png)
+
+远程连接
+
+```sh
+# 从本地使用 ssh 连接 studio 端口
+ssh -CNg -L 8501:127.0.0.1:8501 root@ssh.intern-ai.org.cn -p 40165
+```
+
+浏览器访问 `http://localhost:8501/`
+
+模型过拟合严重
+
+![](InternLM2_homework4.assets/web_demo3.png)
+
+
 
 # 进阶作业
 
 ## 部署到 OpenXLab
+
+### 模型上传到 OpenXLab
+
+首先先将模型下载到本地电脑
+
+![](InternLM2_homework4.assets/download.png)
+
+然后在openxlab建立一个仓库
+
+![](InternLM2_homework4.assets/create_repo.png)
+
+
+
+clone仓库到本地
+
+```sh
+git clone https://code.openxlab.org.cn/NagatoYuki0943/xtuner-self-assistant.git
+```
+
+![](InternLM2_homework4.assets/git1.png)
+
+将模型文件放入本地仓库
+
+![](InternLM2_homework4.assets/git2.png)
+
+**LFS管理大文件**：使用 `git lfs track` 命令来标记你希望通过 Git LFS 管理的大文件。例如，您想要通过LFS管理所有的 `.bin`和` .model`的模型文件，可以使用以下命令：
+
+```sh
+git lfs track "*.bin"
+git lfs track "*.model"
+git lfs track "*.safetensors"
+```
+
+![](InternLM2_homework4.assets/git3.png)
+
+上传模型
+
+```sh
+git add -A
+git commit -m "upload model"
+git push
+```
+
+> `git push` 后并没有出现教程中的登陆框,而是直接在浏览器打开了一个链接,这个链接也是无法访问的
+
+![](InternLM2_homework4.assets/%E6%97%A0%E6%B3%95%E4%B8%8A%E4%BC%A0.png)
+
+
+
+### 部署到 OpenXLab
 
 ## 复现多模态微调
 
