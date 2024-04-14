@@ -24,9 +24,13 @@
 
 ## 作业4
 
+<a href="InternLM2_note4.md">InternLM2 课程笔记4</a>
+
 <a href="InternLM2_homework4.md">InternLM2 作业4</a>
 
 ## 作业5
+
+<a href="InternLM2_note5.md">InternLM2 课程笔记5</a>
 
 <a href="InternLM2_homework5.md">InternLM2 作业5</a>
 

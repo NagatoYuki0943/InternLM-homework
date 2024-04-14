@@ -2,6 +2,10 @@
 
 ## 1.在[茴香豆 Web 版](https://openxlab.org.cn/apps/detail/tpoisonooo/huixiangdou-web)中创建自己领域的知识问答助手
 
+知识库名称：python学习
+
+密码：python
+
 我使用了一些python教程的pdf作为rag的数据，数据上传了2次，显示有重复，不过在我询问过开发人员后，确认数据会去重，所以无影响。
 
 <img src="InternLM2_homework3.assets/image-20240407094515960.png" alt="image-20240407094515960" style="zoom:50%;" />
@@ -117,3 +121,61 @@ Python网络爬虫权威指南_第2版.pdf
 ![茴香豆怎么部署到微信群](InternLM2_homework3.assets/%E8%8C%B4%E9%A6%99%E8%B1%86%E6%80%8E%E4%B9%88%E9%83%A8%E7%BD%B2%E5%88%B0%E5%BE%AE%E4%BF%A1%E7%BE%A4.png)
 
 # 进阶作业
+
+## 部署茴香豆到飞书
+
+1. 进入[飞书开放平台](https://open.feishu.cn/app?lang=zh-CN)，创建企业自建应用
+
+![feishu1](InternLM2_homework3.assets/feishu1.png)
+
+2. 点击确定后稍等。进入机器人主页后点击“凭证与基础信息”，进去之后复制App ID和Secret
+
+![feishu2](InternLM2_homework3.assets/feishu2.png)
+
+3. 在茴香豆Web 版中输入知识库和密码，上传文档进行初步测试后，点击“零开发集成飞书”，在弹出的对话框中将先前复制的App ID和Secret输入至1和2处，并复制3和4处的内容备用。
+
+![feishu3](InternLM2_homework3.assets/feishu3.png)
+
+4. 在飞书机器人主页点击“事件与回调 | 加密策略”，将步骤4中的3和4分别填进飞书中的 `Encrypt Key` 和 `Verification Token`；
+
+![feishu4](InternLM2_homework3.assets/feishu4.png)
+
+5. 将步骤3中的6处飞书事件请求地址填入飞书后台的`开发配置-事件与回调tab-事件配置`中
+
+![feishu5](InternLM2_homework3.assets/feishu5.png)
+
+6. 点击“添加事件”，搜索“接收消息”
+
+![feishu6](InternLM2_homework3.assets/feishu6.png)
+
+7. 给接受消息开启权限
+
+![feishu7](InternLM2_homework3.assets/feishu7.png)
+
+8. 点击“权限管理”，申请开通权限：`im:chat:readonly` 和 `im:message:send_as_bot`：
+
+![feishu8](InternLM2_homework3.assets/feishu8.png)
+
+![feishu9](InternLM2_homework3.assets/feishu9.png)
+
+9. 发布应用，创建应用版本
+
+![feishu10](InternLM2_homework3.assets/feishu10.png)
+
+10. 审核通过
+
+![feishu11](InternLM2_homework3.assets/feishu11.png)
+
+11. 机器人添加机器人能力
+
+![feishu12](InternLM2_homework3.assets/feishu12.png)
+
+12. 创建群聊，注意群后缀要改为步骤3中5处的后缀，再将刚刚创建并发布的应用机器人添加到群聊中。
+
+![feishu13](InternLM2_homework3.assets/feishu13.png)
+
+13. 与机器人对话
+
+机器人成功回答群聊
+
+![](InternLM2_homework3.assets/feishu14.png)
