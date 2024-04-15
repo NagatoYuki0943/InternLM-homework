@@ -226,3 +226,597 @@ yi
 yi-vl
 ```
 
+## 使用
+
+### 聊天
+
+使用LMDeploy与模型进行对话的通用命令格式为：
+
+```sh
+lmdeploy chat [HF格式模型路径/TurboMind格式模型路径]
+```
+
+例如，您可以执行如下命令运行下载的7B模型：
+
+```sh
+export HF_MODEL=internlm/internlm2-chat-7b
+
+# 使用pytorch后端
+lmdeploy chat \
+    $HF_MODEL \
+    --backend pytorch \
+    --tp 1 \
+    --cache-max-entry-count 0.8
+
+# 使用turbomind后端
+lmdeploy chat \
+    $HF_MODEL \
+    --backend turbomind \
+    --model-format hf \
+    --tp 1 \
+    --cache-max-entry-count 0.8 \
+    --quant-policy 0
+```
+
+### KV Cache
+
+KV Cache是一种缓存技术，通过存储键值对的形式来复用计算结果，以达到提高性能和降低内存消耗的目的。在大规模训练和推理中，KV Cache可以显著减少重复计算量，从而提升模型的推理速度。理想情况下，KV Cache全部存储于显存，以加快访存速度。当显存空间不足时，也可以将KV Cache放在内存，通过缓存管理器控制将当前需要使用的数据放入显存。
+
+模型在运行时，占用的显存可大致分为三部分：模型参数本身占用的显存、KV Cache占用的显存，以及中间运算结果占用的显存。LMDeploy的KV Cache管理器可以通过设置`--cache-max-entry-count`参数，控制KV缓存**占用剩余显存**的最大比例。默认的比例为0.8。
+
+```sh
+export HF_MODEL=internlm/internlm2-chat-7b
+
+lmdeploy chat \
+    $HF_MODEL \
+    --backend turbomind \
+    --model-format hf \
+    --tp 1 \
+    --cache-max-entry-count 0.8 \
+    --quant-policy 0
+```
+
+### 量化
+
+量化是一种以参数或计算中间结果精度下降换空间节省（以及同时带来的性能提升）的策略。
+
+正式介绍 LMDeploy 量化方案前，需要先介绍两个概念：
+
+* 计算密集（compute-bound）: 指推理过程中，绝大部分时间消耗在数值计算上；针对计算密集型场景，可以通过使用更快的硬件计算单元来提升计算速度。
+* 访存密集（memory-bound）: 指推理过程中，绝大部分时间消耗在数据读取上；针对访存密集型场景，一般通过减少访存次数、提高计算访存比或降低访存量来优化。
+
+常见的 LLM 模型由于 Decoder Only 架构的特性，实际推理时大多数的时间都消耗在了逐 Token 生成阶段（Decoding 阶段），是典型的访存密集型场景。
+
+那么，如何优化 LLM 模型推理中的访存密集问题呢？ 我们可以使用**KV8量化**和**W4A16**量化。KV8量化是指将逐 Token（Decoding）生成过程中的上下文 K 和 V 中间结果进行 INT8 量化（计算时再反量化），以降低生成过程中的显存占用。W4A16 量化，将 FP16 的模型权重量化为 INT4，Kernel 计算时，访存量直接降为 FP16 模型的 1/4，大幅降低了访存成本。Weight Only 是指仅量化权重，数值计算依然采用 FP16（需要将 INT4 权重反量化）。
+
+#### [KV Cache int8](https://github.com/InternLM/lmdeploy/blob/main/docs/zh_cn/quantization/kv_int8.md)
+
+KV Cache int8 是将 KVCache 进一步量化为 int8 来减少显存的占用，值得注意的是，量化也分为量化和反量化2个步骤，推理时需要反量化为16bit进行运算。
+
+> 第一步
+>
+> 通过以下命令，获取量化参数，并保存至原HF模型目录
+
+```sh
+export HF_MODEL=internlm/internlm2-chat-7b
+
+lmdeploy lite calibrate \
+  $HF_MODEL \
+  --calib-dataset 'ptb' \
+  --calib-samples 128 \
+  --calib-seqlen 2048 \
+  --work-dir $HF_MODEL
+```
+
+> 第二步
+>
+> 测试聊天效果。注意需要添加参数`--quant-policy 4`以开启KV Cache int8模式。
+
+```sh
+export HF_MODEL=internlm/internlm2-chat-7b
+
+# 必须指明 --model-format hf 才能使用
+lmdeploy chat \
+    $HF_MODEL \
+    --backend turbomind \
+    --model-format hf \
+    --tp 1 \
+    --cache-max-entry-count 0.8 \
+    --quant-policy 4 # 启用 kv int8 量化, 校准/W4A16量化的模型才能使用 kv int8 量化
+```
+
+#### [W4A16](https://github.com/InternLM/lmdeploy/blob/main/docs/zh_cn/quantization/w4a16.md)
+
+使用 AWQ 算法，实现模型 4bit 权重量化。
+
+仅需执行一条命令，就可以完成模型量化工作。量化结束后，权重文件存放在 `$WORK_DIR` 下。
+
+```sh
+export HF_MODEL=internlm/internlm2-chat-7b
+export WORK_DIR=internlm/internlm2-chat-7b-4bit
+
+lmdeploy lite auto_awq \
+    $HF_MODEL \
+    --calib-dataset 'ptb' \
+    --calib-samples 128 \
+    --calib-seqlen 2048 \
+    --w-bits 4 \
+    --w-group-size 128 \
+    --work-dir $WORK_DIR
+```
+
+量化后的模型，可以用一些工具快速验证对话效果。
+
+```sh
+# 必须指明 --model-format awq 才能使用
+export WORK_DIR=internlm/internlm2-chat-7b-4bit
+
+lmdeploy chat \
+    $WORK_DIR \
+    --backend turbomind \
+    --model-format awq \
+    --tp 1 \
+    --cache-max-entry-count 0.8 \
+    --quant-policy 0 # 0/4 校准/W4A16量化的模型可以使用 kv int8 量化
+```
+
+#### [W8A8](https://github.com/InternLM/lmdeploy/blob/main/docs/zh_cn/quantization/w8a8.md)
+
+使用 8 bit 整数对神经网络模型进行量化和推理的功能。
+
+在开始推理前，需要确保已经正确安装了 lmdeploy 和 openai/triton。
+
+将原 16bit 权重量化为 8bit，并保存至 `internlm2-chat-7b-w8` 目录下，操作命令如下：
+
+```sh
+export HF_MODEL=internlm/internlm2-chat-7b
+export WORK_DIR=internlm/internlm2-chat-7b-w8
+
+lmdeploy lite smooth_quant \
+    $HF_MODEL \
+    --calib-dataset 'ptb' \
+    --calib-samples 128 \
+    --calib-seqlen 2048 \
+    --work-dir $WORK_DIR
+```
+
+然后，执行以下命令，即可在终端与模型对话：
+
+```sh
+export WORK_DIR=internlm/internlm2-chat-7b-w8
+
+lmdeploy chat \
+    $WORK_DIR \
+    --backend pytorch \
+    --tp 1 \
+    --cache-max-entry-count 0.8
+
+# 不支持 turbomind
+# 同样不支持转换为turbomind格式进行推理，可以转换格式，但是输出结果是乱的
+```
+
+### 服务推理
+
+#### api_server
+
+使用 api 进行推理
+
+```sh
+export HF_MODEL=internlm/internlm2-chat-7b
+
+lmdeploy serve api_server \
+    $HF_MODEL \
+    --backend turbomind \
+    --model-format hf \
+    --tp 1 \
+    --cache-max-entry-count 0.8 \
+    --quant-policy 0 \
+    --model-name internlm2_1_8b_chat \
+    --server-name {ip_addr} \
+    --server-port {port}
+```
+
+server访问
+
+```sh
+lmdeploy serve api_client {ip_addr}:{port}
+```
+
+使用的架构是这样的：
+
+![image-20240415165527984](InternLM2_note5.assets/image-20240415165527984.png)
+
+#### gradio
+
+启动 gradio 页面
+
+```sh
+export HF_MODEL=internlm/internlm2-chat-7b
+
+lmdeploy serve gradio \
+    $HF_MODEL \
+    --backend turbomind \
+    --model-format hf \
+    --tp 1 \
+    --cache-max-entry-count 0.8 \
+    --quant-policy 0 \
+    --server-name {ip_addr} \
+    --server-port {port}
+```
+
+先启动server作为后端，再启动gradio作为前端
+
+```sh
+export HF_MODEL=internlm/internlm2-chat-7b
+
+lmdeploy serve api_server \
+    $HF_MODEL \
+    --backend turbomind \
+    --model-format hf \
+    --tp 1 \
+    --cache-max-entry-count 0.8 \
+    --quant-policy 0 \
+    --model-name internlm2_1_8b_chat \
+    --server-name {ip_addr} \
+    --server-port {port}
+
+lmdeploy serve gradio {ip_addr}:{port} \
+    --server-name 0.0.0.0 \
+    --server-port 6006
+```
+
+现在使用的架构是这样的：
+
+![image-20240415165736593](InternLM2_note5.assets/image-20240415165736593.png)
+
+### 代码推理 pipeline
+
+### pytorch 后端
+
+```python
+import os
+from lmdeploy import pipeline, GenerationConfig, PytorchEngineConfig, ChatTemplateConfig
+
+
+model_path = './models/internlm2-chat-1_8b'
+# os.system(f'git clone https://code.openxlab.org.cn/OpenLMLab/internlm2-chat-1.8b {model_path}')
+# os.system(f'cd {model_path} && git lfs pull')
+
+
+if __name__ == '__main__':
+    # https://lmdeploy.readthedocs.io/zh-cn/latest/api/pipeline.html#pytorchengineconfig
+    backend_config = PytorchEngineConfig(
+        model_name = 'internlm2',
+        tp = 1,
+        session_len = 2048,
+        max_batch_size = 128,
+        cache_max_entry_count = 0.5, # 调整KV Cache的占用比例为0.5
+        eviction_type = 'recompute',
+        prefill_interval = 16,
+        block_size = 64,
+        num_cpu_blocks = 0,
+        num_gpu_blocks = 0,
+        adapters = None,
+        max_prefill_token_num = 4096,
+        thread_safe = False,
+        download_dir = None,
+        revision = None,
+    )
+
+    system_prompt = """You are an AI assistant whose name is InternLM (书生·浦语).
+    - InternLM (书生·浦语) is a conversational language model that is developed by Shanghai AI Laboratory (上海人工智能实验室). It is designed to be helpful, honest, and harmless.
+    - InternLM (书生·浦语) can understand and communicate fluently in the language chosen by the user such as English and 中文.
+    """
+
+    # https://lmdeploy.readthedocs.io/zh-cn/latest/_modules/lmdeploy/model.html#ChatTemplateConfig
+    chat_template_config = ChatTemplateConfig(
+        model_name = 'internlm2',
+        system = None,
+        meta_instruction = system_prompt,
+    )
+
+    # https://lmdeploy.readthedocs.io/zh-cn/latest/api/pipeline.html#generationconfig
+    gen_config = GenerationConfig(
+        n = 1,
+        max_new_tokens = 1024,
+        top_p = 0.8,
+        top_k = 40,
+        temperature = 0.8,
+        repetition_penalty = 1.0,
+        ignore_eos = False,
+        random_seed = None,
+        stop_words = None,
+        bad_words = None,
+        min_new_tokens = None,
+        skip_special_tokens = True,
+    )
+
+    # https://lmdeploy.readthedocs.io/zh-cn/latest/api/pipeline.html
+    # https://github.com/InternLM/lmdeploy/blob/main/lmdeploy/api.py
+    pipe = pipeline(
+        model_path = model_path,
+        model_name = 'internlm2_chat_1_8b',
+        backend_config = backend_config,
+        chat_template_config = chat_template_config,
+    )
+
+    #----------------------------------------------------------------------#
+    # prompts (List[str] | str | List[Dict] | List[Dict]): a batch of
+    #     prompts. It accepts: string prompt, a list of string prompts,
+    #     a chat history in OpenAI format or a list of chat history.
+    # [
+    #     {
+    #         "role": "system",
+    #         "content": "You are a helpful assistant."
+    #     },
+    #     {
+    #         "role": "user",
+    #         "content": "What is the capital of France?"
+    #     },
+    #     {
+    #         "role": "assistant",
+    #         "content": "The capital of France is Paris."
+    #     },
+    #     {
+    #         "role": "user",
+    #         "content": "Thanks!"
+    #     },
+    #     {
+    #         "role": "assistant",
+    #         "content": "You are welcome."
+    #     }
+    # ]
+    #----------------------------------------------------------------------#
+    prompts = [[{
+        'role': 'user',
+        'content': 'Hi, pls intro yourself'
+    }], [{
+        'role': 'user',
+        'content': 'Shanghai is'
+    }]]
+
+    # https://github.com/InternLM/lmdeploy/blob/main/lmdeploy/serve/async_engine.py#L274
+    responses = pipe(prompts, gen_config=gen_config)
+    # 放入 [{},{}] 格式返回一个response
+    # 放入 [] 或者 [[{},{}]] 格式返回一个response列表
+    for response in responses:
+        print(response)
+        print('text:', response.text)
+        print('generate_token_len:', response.generate_token_len)
+        print('input_token_len:', response.input_token_len)
+        print('session_id:', response.session_id)
+        print('finish_reason:', response.finish_reason)
+        print()
+```
+
+### turbomind 后端
+
+```python
+import os
+from lmdeploy import pipeline, GenerationConfig, TurbomindEngineConfig, ChatTemplateConfig
+
+
+model_path = './models/internlm2-chat-1_8b'
+# os.system(f'git clone https://code.openxlab.org.cn/OpenLMLab/internlm2-chat-1.8b {model_path}')
+# os.system(f'cd {model_path} && git lfs pull')
+
+
+if __name__ == '__main__':
+    # 可以直接使用transformers的模型,会自动转换格式
+    # https://lmdeploy.readthedocs.io/zh-cn/latest/api/pipeline.html#turbomindengineconfig
+    backend_config = TurbomindEngineConfig(
+        model_name = 'internlm2',
+        model_format = 'hf', # The format of input model. `hf` meaning `hf_llama`, `llama` meaning `meta_llama`, `awq` meaning the quantized model by awq. Default: None. Type: str
+        tp = 1,
+        session_len = 2048,
+        max_batch_size = 128,
+        cache_max_entry_count = 0.5, # 调整KV Cache的占用比例为0.5
+        cache_block_seq_len = 64,
+        quant_policy = 0, # 默认为0, 4为开启kvcache int8 量化
+        rope_scaling_factor = 0.0,
+        use_logn_attn = False,
+        download_dir = None,
+        revision = None,
+        max_prefill_token_num = 8192,
+    )
+
+    system_prompt = """You are an AI assistant whose name is InternLM (书生·浦语).
+    - InternLM (书生·浦语) is a conversational language model that is developed by Shanghai AI Laboratory (上海人工智能实验室). It is designed to be helpful, honest, and harmless.
+    - InternLM (书生·浦语) can understand and communicate fluently in the language chosen by the user such as English and 中文.
+    """
+
+    # https://lmdeploy.readthedocs.io/zh-cn/latest/_modules/lmdeploy/model.html#ChatTemplateConfig
+    chat_template_config = ChatTemplateConfig(
+        model_name = 'internlm2',
+        system = None,
+        meta_instruction = system_prompt,
+    )
+
+    # https://lmdeploy.readthedocs.io/zh-cn/latest/api/pipeline.html#generationconfig
+    gen_config = GenerationConfig(
+        n = 1,
+        max_new_tokens = 1024,
+        top_p = 0.8,
+        top_k = 40,
+        temperature = 0.8,
+        repetition_penalty = 1.0,
+        ignore_eos = False,
+        random_seed = None,
+        stop_words = None,
+        bad_words = None,
+        min_new_tokens = None,
+        skip_special_tokens = True,
+    )
+
+    # https://lmdeploy.readthedocs.io/zh-cn/latest/api/pipeline.html
+    # https://github.com/InternLM/lmdeploy/blob/main/lmdeploy/api.py
+    pipe = pipeline(
+        model_path = model_path,
+        model_name = 'internlm2_chat_1_8b',
+        backend_config = backend_config,
+        chat_template_config = chat_template_config,
+    )
+
+    #----------------------------------------------------------------------#
+    # prompts (List[str] | str | List[Dict] | List[Dict]): a batch of
+    #     prompts. It accepts: string prompt, a list of string prompts,
+    #     a chat history in OpenAI format or a list of chat history.
+    # [
+    #     {
+    #         "role": "system",
+    #         "content": "You are a helpful assistant."
+    #     },
+    #     {
+    #         "role": "user",
+    #         "content": "What is the capital of France?"
+    #     },
+    #     {
+    #         "role": "assistant",
+    #         "content": "The capital of France is Paris."
+    #     },
+    #     {
+    #         "role": "user",
+    #         "content": "Thanks!"
+    #     },
+    #     {
+    #         "role": "assistant",
+    #         "content": "You are welcome."
+    #     }
+    # ]
+    #----------------------------------------------------------------------#
+    prompts = [[{
+        'role': 'user',
+        'content': 'Hi, pls intro yourself'
+    }], [{
+        'role': 'user',
+        'content': 'Shanghai is'
+    }]]
+
+    # https://github.com/InternLM/lmdeploy/blob/main/lmdeploy/serve/async_engine.py#L274
+    responses = pipe(prompts, gen_config=gen_config)
+    # 放入 [{},{}] 格式返回一个response
+    # 放入 [] 或者 [[{},{}]] 格式返回一个response列表
+    for response in responses:
+        print(response)
+        print('text:', response.text)
+        print('generate_token_len:', response.generate_token_len)
+        print('input_token_len:', response.input_token_len)
+        print('session_id:', response.session_id)
+        print('finish_reason:', response.finish_reason)
+        print()
+```
+
+### 转换模型格式
+
+将 hf/awq 格式的模型转换为 turbomind 格式的模型
+
+```sh
+export HF_MODEL=internlm/internlm2-chat-7b
+export DST_PATH=internlm/internlm2-chat-7b-turbomind
+
+lmdeploy convert internlm2 \
+    $HF_MODEL \
+    --model-format hf \
+    --tp 1 \
+    --dst-path $DST_PATH
+```
+
+转化量化后的W4A16模型,需要设置 group-size
+
+```sh
+# 转化量化后的W4A16模型,需要设置 group-size
+export AWQ_MODEL=internlm/internlm2-chat-7b-4bit
+export DST_PATH=internlm/internlm2-chat-7b-4bit-turbomind
+
+lmdeploy convert internlm2 \
+    $AWQ_MODEL \
+    --model-format awq \
+    --group-size 128 \
+    --tp 1 \
+    --dst-path $DST_PATH
+```
+
+推理
+
+```sh
+export DST_PATH=internlm/internlm2-chat-7b-turbomind
+
+lmdeploy chat \
+    $DST_PATH \
+    --backend turbomind \
+    --tp 1 \
+    --cache-max-entry-count 0.8 \
+    --quant-policy 0 # 0/4 turbomind格式可以直接使用 kv int8 量化
+```
+
+### 显示支持的模型
+
+```sh
+> lmdeploy list
+The older chat template name like "internlm2-7b", "qwen-7b" and so on are deprecated and will be removed in the future. The supported chat template names are:
+baichuan2
+chatglm
+codellama
+dbrx
+deepseek
+deepseek-coder
+deepseek-vl
+falcon
+gemma
+internlm
+internlm2
+llama
+llama2
+mistral
+mixtral
+puyu
+qwen
+solar
+ultracm
+ultralm
+vicuna
+wizardlm
+yi
+yi-vl
+```
+
+### check_env
+
+检查环境
+
+```sh
+> lmdeploy check_env
+sys.platform: linux
+Python: 3.10.13 (main, Sep 11 2023, 13:44:35) [GCC 11.2.0]
+CUDA available: True
+MUSA available: False
+numpy_random_seed: 2147483648
+GPU 0: Tesla V100-SXM2-16GB
+CUDA_HOME: /usr/local/cuda
+NVCC: Cuda compilation tools, release 12.1, V12.1.105
+GCC: gcc (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0
+PyTorch: 2.1.2+cu121
+PyTorch compiling details: PyTorch built with:
+  - GCC 9.3
+  - C++ Version: 201703
+  - Intel(R) oneAPI Math Kernel Library Version 2022.2-Product Build 20220804 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v3.1.1 (Git Hash 64f6bcbcbab628e96f33a62c3e975f8535a7bde4)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - LAPACK is enabled (usually provided by MKL)
+  - NNPACK is enabled
+  - CPU capability usage: AVX512
+  - CUDA Runtime 12.1
+  - NVCC architecture flags: -gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_90,code=sm_90
+  - CuDNN 8.9.2
+  - Magma 2.6.1
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=12.1, CUDNN_VERSION=8.9.2, CXX_COMPILER=/opt/rh/devtoolset-9/root/usr/bin/c++, CXX_FLAGS= -D_GLIBCXX_USE_CXX11_ABI=0 -fabi-version=11 -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DLIBKINETO_NOROCTRACER -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -O2 -fPIC -Wall -Wextra -Werror=return-type -Werror=non-virtual-dtor -Werror=bool-operation -Wnarrowing -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-unused-parameter -Wno-unused-function -Wno-unused-result -Wno-strict-overflow -Wno-strict-aliasing -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=old-style-cast -Wno-invalid-partial-specialization -Wno-unused-private-field -Wno-aligned-allocation-unavailable -Wno-missing-braces -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Werror=cast-function-type -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, TORCH_DISABLE_GPU_ASSERTS=ON, TORCH_VERSION=2.1.2, USE_CUDA=ON, USE_CUDNN=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=1, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF,
+
+TorchVision: 0.16.2+cu121
+LMDeploy: 0.3.0+
+transformers: 4.37.2
+gradio: 4.25.0
+fastapi: 0.110.1
+pydantic: 2.6.4
+triton: 2.1.0
+```
+

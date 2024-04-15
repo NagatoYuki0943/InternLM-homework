@@ -139,7 +139,7 @@ if __name__ == "__main__":
 
 > 使用软链接
 
-```
+```sh
 ln -s /root/share/new_models/Shanghai_AI_Laboratory/internlm2-chat-1_8b /root/xtuner0117/ft
 ```
 
@@ -513,7 +513,7 @@ xtuner train config/internlm2_1_8b_qlora_self_e2.py --work-dir ./train_deepspeed
 
 #### 模型转换
 
-模型转换的本质其实就是将原本使用 Pytorch 训练出来的模型权重文件转换为目前通用的 Huggingface 格式文件，那么我们可以通过以下指令来实现一键转换。
+模型转换的本质其实就是将原本使用 Xtuner 训练出来的模型权重文件转换为目前通用的 Huggingface 格式文件，那么我们可以通过以下指令来实现一键转换。
 
 ```sh
 cd /root/xtuner0117/ft/
@@ -665,8 +665,6 @@ All done!
 
 ![](InternLM2_homework4.assets/merge.png)
 
-
-
 #### 对话测试
 
 在 XTuner 中也直接的提供了一套基于 transformers 的对话代码，让我们可以直接在终端与  Huggingface  格式的模型进行对话操作。我们只需要准备我们刚刚转换好的模型路径并选择对应的提示词模版（prompt-template）即可进行对话。假如  prompt-template 选择有误，很有可能导致模型无法正确的进行回复。
@@ -680,6 +678,7 @@ cd /root/xtuner0117/ft/
 export MKL_SERVICE_FORCE_INTEL=1
 
 # 与模型进行对话
+# xtuner chat ${NAME_OR_PATH_TO_LLM} --prompt-template {prompt-template}
 xtuner chat final_model --prompt-template internlm2_chat
 ```
 
@@ -1275,6 +1274,36 @@ git push
 
 
 ### 部署到 OpenXLab
+
+仓库地址 https://github.com/NagatoYuki0943/XTuner-web-demo
+
+根据要求创建仓库和对应文件
+
+```sh
+├─GitHub_Repo_Name
+│  ├─app.py                 # Gradio 应用默认启动文件为app.py，应用代码相关的文件包含模型推理，应用的前端配置代码
+│  ├─requirements.txt       # 安装运行所需要的 Python 库依赖（pip 安装）
+│  ├─packages.txt           # 安装运行所需要的 Debian 依赖项（ apt-get 安装）
+|  ├─README.md              # 编写应用相关的介绍性的文档
+│  └─... 
+```
+
+`packages.txt` 添加需要的dibian依赖
+
+```sh
+git
+git-lfs
+```
+
+`requirements.txt` 中添加需要的python依赖
+
+```txt
+...
+```
+
+`app.py` 中编写代码
+
+主要内容有下载模型，载入模型，启动gradio
 
 ## 复现多模态微调
 
