@@ -31,7 +31,7 @@ ln -s /root/share/new_models/Shanghai_AI_Laboratory/internlm2-chat-1_8b /root/lm
 > 自己服务器上下载
 
 ```sh
-apt install git-lfs   
+apt install git-lfs
 git lfs install  --system
 git clone https://code.openxlab.org.cn/OpenLMLab/internlm2-chat-1.8b.git
 ```
@@ -147,7 +147,7 @@ system_prompt:  You are an AI assistant whose name is InternLM (书生·浦语).
 从那天起，汤姆和杰克成为了最好的朋友，他们一起玩耍，分享快乐和悲伤。这个故事告诉我们，友谊是一种宝贵的财富，只有真心对待朋友，才能获得真正的友谊。
 
 请输入提示: exit
-(lm) root@intern-studio-030876:~/lmdeploy# 
+(lm) root@intern-studio-030876:~/lmdeploy#
 ```
 
 ![](InternLM2_homework5.assets/transformers_run.png)
@@ -261,7 +261,7 @@ EXIT<|im_end|>
 
 double enter to end input >>> exit
 
-(lm) root@intern-studio-030876:~/lmdeploy# 
+(lm) root@intern-studio-030876:~/lmdeploy#
 ```
 
 ![](InternLM2_homework5.assets/chat1.png)
@@ -347,7 +347,7 @@ use_logn_attn = 0
 
 
 2024-04-13 18:21:35,171 - lmdeploy - WARNING - get 267 model params
-2024-04-13 18:22:14,979 - lmdeploy - WARNING - Input chat template with model_name is None. Forcing to use internlm2                                                      
+2024-04-13 18:22:14,979 - lmdeploy - WARNING - Input chat template with model_name is None. Forcing to use internlm2
 [WARNING] gemm_config.in is not found; using default GEMM algo
 session 1
 
@@ -383,7 +383,7 @@ You are an AI assistant whose name is InternLM (书生·浦语).
 
 double enter to end input >>> exit
 
-(lm) root@intern-studio-030876:~/lmdeploy# 
+(lm) root@intern-studio-030876:~/lmdeploy#
 ```
 
 ![](InternLM2_homework5.assets/chat2.png)
@@ -603,7 +603,7 @@ if __name__ == '__main__':
 
 ```sh
 > python turbomind_pipeline.py
-[WARNING] gemm_config.in is not found; using default GEMM algo                                                                                    
+[WARNING] gemm_config.in is not found; using default GEMM algo
 Response(text="Hello! My name is InternLM (书生·浦语), and I am a language model designed to assist and provide information to users. I'm here to help you with any questions or tasks you may have. I'm here to provide honest and helpful responses, and I'm committed to ensuring that my responses are safe and harmless. Please feel free to ask me anything, and I'll do my best to assist you.", generate_token_len=87, input_token_len=108, session_id=0, finish_reason='stop')
 text: Hello! My name is InternLM (书生·浦语), and I am a language model designed to assist and provide information to users. I'm here to help you with any questions or tasks you may have. I'm here to provide honest and helpful responses, and I'm committed to ensuring that my responses are safe and harmless. Please feel free to ask me anything, and I'll do my best to assist you.
 generate_token_len: 87
@@ -649,8 +649,8 @@ print(response)
 > 运行命令记录
 
 ```sh
-> python pipeline_llava.py 
-[WARNING] gemm_config.in is not found; using default GEMM algo                                                                                    
+> python pipeline_llava.py
+[WARNING] gemm_config.in is not found; using default GEMM algo
 You are using a model of type llava to instantiate a model of type llava_llama. This is not supported for all configurations of models and can yield errors.
 You are using a model of type llava to instantiate a model of type llava_llama. This is not supported for all configurations of models and can yield errors.
 Loading checkpoint shards: 100%|████████████████████████████████████████████████████████████████████████████████████| 3/3 [00:00<00:00,  4.24it/s]
@@ -685,13 +685,13 @@ def model(image, text):
         return [(text, response)]
 
 demo = gr.Interface(fn=model, inputs=[gr.Image(type="pil"), gr.Textbox()], outputs=gr.Chatbot())
-demo.launch()   
+demo.launch()
 ```
 
 > 远程连接
 
 ```sh
-ssh -CNg -L 7860:127.0.0.1:7860 root@ssh.intern-ai.org.cn -p 40165 
+ssh -CNg -L 7860:127.0.0.1:7860 root@ssh.intern-ai.org.cn -p 40165
 ```
 
 > 访问 `127.0.0.1:7860`
@@ -765,7 +765,7 @@ def model(image, text):
         return [(text, response)]
 
 demo = gr.Interface(fn=model, inputs=[gr.Image(type="pil"), gr.Textbox()], outputs=gr.Chatbot())
-demo.launch()   
+demo.launch()
 ```
 
 > 调整分辨率后可以正常运行
@@ -776,7 +776,7 @@ demo.launch()
 
 ![](InternLM2_homework5.assets/llava7.png)
 
-## 将 LMDeploy Web Demo 部署到 [OpenXLab](https://github.com/InternLM/Tutorial/blob/camp2/tools/openxlab-deploy) 
+## 将 LMDeploy Web Demo 部署到 [OpenXLab](https://github.com/InternLM/Tutorial/blob/camp2/tools/openxlab-deploy)
 
 仓库地址 https://github.com/NagatoYuki0943/LMDeploy-Web-Demo
 
@@ -788,7 +788,7 @@ demo.launch()
 │  ├─requirements.txt       # 安装运行所需要的 Python 库依赖（pip 安装）
 │  ├─packages.txt           # 安装运行所需要的 Debian 依赖项（ apt-get 安装）
 |  ├─README.md              # 编写应用相关的介绍性的文档
-│  └─... 
+│  └─...
 ```
 
 `packages.txt` 添加需要的dibian依赖
@@ -1004,7 +1004,7 @@ with block as demo:
     with gr.Row():
         with gr.Column(scale=4):
             # 创建聊天框
-            chatbot = gr.Chatbot(height=450, show_copy_button=True)
+            chatbot = gr.Chatbot(height=800, show_copy_button=True)
 
             with gr.Row():
                 max_new_tokens = gr.Slider(
@@ -1079,7 +1079,6 @@ with block as demo:
             outputs=[chatbot]
         )
 
-
     gr.Markdown("""提醒：<br>
     1. 使用中如果出现异常，将会在文本输入框进行展示，请不要惊慌。 <br>
     """)
@@ -1093,6 +1092,22 @@ demo.queue(max_size=100)
 # 启动新的 Gradio 应用，设置分享功能为 True，并使用环境变量 PORT1 指定服务器端口。
 # demo.launch(share=True, server_port=int(os.environ['PORT1']))
 # 直接启动
-demo.launch(server_name="127.0.0.1", server_port=7860)
+# demo.launch(server_name="127.0.0.1", server_port=7860)
+demo.launch()
 ```
 
+在 openxlab https://openxlab.org.cn/home 官网，点击右上角的创建按钮，点击创建应用，选择gradio
+
+![LMDeployWebDemo1](InternLM2_homework5.assets/LMDeployWebDemo1.png)
+
+填写应用名称和github地址，选择硬件资源和镜像。
+
+![LMDeployWebDemo2](InternLM2_homework5.assets/LMDeployWebDemo2.png)
+
+点击立即创建，即可创建应用
+
+![LMDeployWebDemo3](InternLM2_homework5.assets/LMDeployWebDemo3.png)
+
+经过长时间等待，构建成功，等待启动
+
+![LMDeployWebDemo4](InternLM2_homework5.assets/LMDeployWebDemo4.png)
