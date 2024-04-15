@@ -606,3 +606,66 @@ XTuner 内置一些数据引擎，支持将一些开源格式个数据集进行�
 训练过程中支持多数据样本拼接，一次训练可以使用多条数据，增加并行性，充分利用 GPU 资源。
 
 ![15](InternLM2_note4.assets/15.jpg)
+
+# 8GB 显存玩转 LLM
+
+XTuner 支持使用8GB 的显存微调 LLM。主要是使用了 Flash Attention 和 DeepSpeed 这2个库。
+
+Flash Attention 这个库主要是对 Attention 计算并行化，对矩阵乘法和 Softmax 都进行分块计算，避免了计算过程中的 Attention Score NxN 的显存占用。
+
+ZeRO 优化主要是对模型训练过程中的模型权重，优化器状态和模型梯度进行分片存储，减少显存占用。在单 GPU 上训练也能大幅减少显存。
+
+Flash Attention 加速原理：https://www.zhihu.com/question/611236756
+
+李沐老师讲解的ZeRO论文：https://www.bilibili.com/video/BV1tY411g7ZT
+
+![16](InternLM2_note4.assets/16.jpg)
+
+使用 Flash Attention 和 DeepSpeed 虽然能大幅度降低训练成本，但是使用门槛较高，需要复杂的配置，甚至修改代码。下图左侧为 DeepSpeed 的配置选项，有很多的参数，使用好 DeepSpeed 要话很多的时间去学习。而 XTuner 在训练时自动启动了 Flash Attention，使用 DeepSpeed也只需要在命令后添加 `--deepspeed deepspeed_zero2` 命令就可以启动 DeepSpeed 训练。
+
+![17](InternLM2_note4.assets/17.jpg)
+
+下图显示了使用了 Flash Attention 和 DeepSpeed 之后，在不同数据长度时的显存占用，可以看到数据长度越长，显存占用的减少越明显。在数据长度为512时，可以在8GB显存上训练7B的模型。
+
+![18](InternLM2_note4.assets/18.jpg)
+
+
+
+
+
+# InternLM2 1.8B 模型
+
+InternLM2 1.8B 模型是一个小型的 LLM，在 FP16 精度下，仅需要4GB显存即可运行，微调模型仅需要8GB显存，可以收非常适合初学者使用，用以深入了解和掌握大模型的全链路。
+
+InternLM2 1.8B 开源了3个版本。分别为 InternLM2-1.8B，是一个基础模型，是拥有高质量和高适应灵活性的模型。InternLM2-Chat-1.8B-SFT，使用过 SFT 后得到的模型。InternLM2-Chat-1.8B，使用在线 RLHF 在 InternLM2-Chat-1.8B-SFT 上进一步对齐人类偏好。指令跟随能力更强，聊天体验和函数调用功能更好，推荐下游应用程序使用。
+
+![19](InternLM2_note4.assets/19.jpg)
+
+
+
+# 多模态
+
+文本单模态模型，输入只有文本，通过一个 Embedding 模型将文本转化为文本向量，然后把向量给 LLM 得到文本输出。
+
+文本+图像多模态模型，在文本处理上和文本单模态模型相同，不过添加了另一个图像输入分支，通过一个 Image Projector 将图像转换为图像向量，然后和文本向量一起给 LLM，得到文本输出。
+
+![20](InternLM2_note4.assets/20.jpg)
+
+XTuner 支持 LLaVA 多模态模型。它的主要训练方式为：
+
+1. 先使用 GPT-4V 模型对图像进行描述，构造出大量  \<question text\> \<image\>--\<answer text\> 数据对。
+2. 利用这些数据对，配合单模态的文本 LLM 和一个冻结的 Image Backbone，训练出一个 Image Projector
+3. 使用图像对话数据微调 Image Projector 和 LLM，Image Backbone 仍然冻结，让模型具有对话能力。
+
+![21](InternLM2_note4.assets/21.jpg)
+
+Image Projector 的训练和测试，和 LoRA微调方案很想，两者都是在已有的 LLM 的基础上，用新数据训练一个小的文件。
+
+LLM 在 套上 LoRA 之后，才有了新的角色；LLM 套上 Image Projector 之后，才能理解图像。
+
+![22](InternLM2_note4.assets/22.jpg)
+
+在 Pretrain 阶段，会使用大量的图片和简单的文本（文本标题）数据对对模型训练，让模型理解图像中的普遍特征。经过预训练之后，模型已经能够拥有视觉能力了，不过由于训练时只输出了图片标题，因此模型只能输出图片标题，为了能让模型拥有图片对话能力，要使用对话数据集让模型说话，通过人工构造对话数据（下图右侧）来微调模型，微调之后模型就具有了对于图片的精确描述和对话能力。
+
+![23](InternLM2_note4.assets/23.jpg)
+
