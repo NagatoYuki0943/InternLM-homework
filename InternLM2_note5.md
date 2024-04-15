@@ -88,13 +88,13 @@ $$
 
 通用计算公式如下：
 
-
 $$
 ZP = \frac {min + max} 2 \\
 S = \frac {max -min} {255} \\
 \text{量化}: q = round(\frac {f - ZP} S) \\
 \text{反量化}: f = q \times S + ZP
 $$
+
 量化方法主要分为以下几种：
 
 1. 量化感知训练（QAT）
