@@ -1223,6 +1223,8 @@ ssh -CNg -L 8501:127.0.0.1:8501 root@ssh.intern-ai.org.cn -p 40165
 
 ### 模型上传到 OpenXLab
 
+模型地址 https://openxlab.org.cn/models/detail/NagatoYuki0943/xtuner-self-assistant/tree/main
+
 首先先将模型下载到本地电脑
 
 ![](InternLM2_homework4.assets/download.png)
@@ -1270,6 +1272,12 @@ git push
 > 解决办法是创建私有仓库,这样在 `clone` 时就需要在url中写入秘钥,就可以正常 `push` 了,不清楚上述问题出现的原因
 
 ![](InternLM2_homework4.assets/git4.png)
+
+上传成功，地址 https://openxlab.org.cn/models/detail/NagatoYuki0943/xtuner-self-assistant/tree/main
+
+![git5](InternLM2_homework4.assets/git5.jpeg)
+
+
 
 
 
