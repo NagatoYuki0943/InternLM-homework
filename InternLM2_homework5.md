@@ -1122,7 +1122,7 @@ if __name__ == "__main__":
     demo.launch()
 ```
 
-在 openxlab https://openxlab.org.cn/home 官网，点击右上角的创建按钮，点击创建应用，选择gradio
+在 openxlab https://openxlab.org.cn/home 官网，点击右上角的创建按钮，点击创建应用，选择gradio。
 
 ![LMDeployWebDemo1](InternLM2_homework5.assets/LMDeployWebDemo1.png)
 
@@ -1130,14 +1130,14 @@ if __name__ == "__main__":
 
 ![LMDeployWebDemo2](InternLM2_homework5.assets/LMDeployWebDemo2.png)
 
-点击立即创建，即可创建应用
+点击立即创建，即可创建应用。
 
 ![LMDeployWebDemo3](InternLM2_homework5.assets/LMDeployWebDemo3.png)
 
-经过长时间等待，构建成功，等待启动
+经过长时间等待，构建成功，等待启动。
 
 ![LMDeployWebDemo4](InternLM2_homework5.assets/LMDeployWebDemo4.png)
 
-启动成功，可以对话
+启动成功，可以对话。
 
 ![LMDeployWebDemo5](InternLM2_homework5.assets/LMDeployWebDemo5.jpeg)
