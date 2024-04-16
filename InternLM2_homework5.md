@@ -817,12 +817,11 @@ lmdeploy==0.3.0
 主要内容有下载模型，载入模型，启动gradio
 
 ```python
-# https://github.com/InternLM/lmdeploy/blob/main/lmdeploy/serve/gradio/turbomind_coupled.py
-# https://github.com/InternLM/lmdeploy/blob/main/lmdeploy/serve/gradio/vl.py
 import os
 import gradio as gr
 import lmdeploy
 from lmdeploy import pipeline, GenerationConfig, TurbomindEngineConfig, ChatTemplateConfig
+from typing import Generator, Any
 
 
 print("lmdeploy version: ", lmdeploy.__version__)
@@ -842,7 +841,7 @@ backend_config = TurbomindEngineConfig(
     tp = 1,
     session_len = 2048,
     max_batch_size = 128,
-    cache_max_entry_count = 0.4, # 调整KV Cache的占用比例为0.4
+    cache_max_entry_count = 0.8, # 调整KV Cache的占用比例为0.8
     cache_block_seq_len = 64,
     quant_policy = 0, # 默认为0, 4为开启kvcache int8 量化
     rope_scaling_factor = 0.0,
@@ -882,6 +881,7 @@ gen_config = GenerationConfig(
 
 # https://lmdeploy.readthedocs.io/zh-cn/latest/api/pipeline.html
 # https://github.com/InternLM/lmdeploy/blob/main/lmdeploy/api.py
+# https://github.com/InternLM/lmdeploy/blob/main/lmdeploy/serve/async_engine.py
 pipe = pipeline(
     model_path = model_path,
     model_name = 'internlm2_chat_1_8b',
@@ -926,7 +926,7 @@ def chat(
     top_k: int = 40,
     temperature: float = 0.8,
     regenerate: str = "" # 是regen按钮的value,字符串,点击就传送,否则为空字符串
-) -> list:
+) -> Generator[Any, Any, Any]:
     """聊天"""
     global gen_config
 
@@ -937,28 +937,30 @@ def chat(
         if len(history) > 0:
             query, _ = history.pop(-1)
         else:
-            return history
+            yield history
+            return # 这样写管用,但不理解
     else:
         query = query.replace(' ', '')
         if query == None or len(query) < 1:
-            return history
+            yield history
+            return
 
     # 将历史记录转换为openai格式
-    history_t = []
+    prompts = []
     for user, assistant in history:
-        history_t.append(
+        prompts.append(
             {
                 "role": "user",
                 "content": user
             }
         )
-        history_t.append(
+        prompts.append(
             {
                 "role": "assistant",
                 "content": assistant
             })
     # 需要添加当前的query
-    history_t.append(
+    prompts.append(
         {
             "role": "user",
             "content": query
@@ -974,12 +976,22 @@ def chat(
 
     # 放入 [{},{}] 格式返回一个response
     # 放入 [] 或者 [[{},{}]] 格式返回一个response列表
-    response = pipe(history_t, gen_config=gen_config).text
-
-    print(f"query: {query}; response: {response}")
-
-    history.append([query, response])
-    return history
+    print(f"query: {query}; response: ", end="", flush=True)
+    response = ""
+    for _response in pipe.stream_infer(
+        prompts = prompts,
+        gen_config = gen_config,
+        do_preprocess = True,
+        adapter_name = None
+    ):
+        # print(_response)
+        # Response(text='很高兴', generate_token_len=10, input_token_len=111, session_id=0, finish_reason=None)
+        # Response(text='认识', generate_token_len=11, input_token_len=111, session_id=0, finish_reason=None)
+        # Response(text='你', generate_token_len=12, input_token_len=111, session_id=0, finish_reason=None)
+        print(_response.text, flush=True, end="")
+        response += _response.text
+        yield history + [[query, response]]
+    print("\n")
 
 
 def revocery(history: list) -> list:
@@ -1093,6 +1105,7 @@ with block as demo:
 
     gr.Markdown("""提醒：<br>
     1. 使用中如果出现异常，将会在文本输入框进行展示，请不要惊慌。<br>
+    2. 项目地址：https://github.com/NagatoYuki0943/LMDeploy-Web-Demo
     """)
 
 # threads to consume the request
