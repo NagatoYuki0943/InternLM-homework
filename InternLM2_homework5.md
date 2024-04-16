@@ -778,6 +778,8 @@ demo.launch()
 
 ## 将 LMDeploy Web Demo 部署到 [OpenXLab](https://github.com/InternLM/Tutorial/blob/camp2/tools/openxlab-deploy)
 
+项目地址 https://openxlab.org.cn/apps/detail/NagatoYuki0943/LMDeployWebDemobyNagatoYuki0943
+
 仓库地址 https://github.com/NagatoYuki0943/LMDeploy-Web-Demo
 
 根据要求创建仓库和对应文件
@@ -801,7 +803,7 @@ git-lfs
 `requirements.txt` 中添加需要的python依赖
 
 ```txt
-gradio
+gradio>4
 transformers
 sentencepiece
 einops
@@ -819,9 +821,15 @@ lmdeploy==0.3.0
 # https://github.com/InternLM/lmdeploy/blob/main/lmdeploy/serve/gradio/vl.py
 import os
 import gradio as gr
+import lmdeploy
 from lmdeploy import pipeline, GenerationConfig, TurbomindEngineConfig, ChatTemplateConfig
 
 
+print("lmdeploy version: ", lmdeploy.__version__)
+print("gradio version: ", gr.__version__)
+
+
+# clone 模型
 model_path = './models/internlm2-chat-1_8b'
 os.system(f'git clone https://code.openxlab.org.cn/OpenLMLab/internlm2-chat-1.8b {model_path}')
 os.system(f'cd {model_path} && git lfs pull')
@@ -918,21 +926,22 @@ def chat(
     top_k: int = 40,
     temperature: float = 0.8,
     regenerate: bool = False
-) -> tuple[str, list]:
+) -> list:
     """聊天"""
     global gen_config
 
+    history = [] if history is None else history
     # 重新生成时要把最后的query和response弹出,重用query
     if regenerate:
         # 有历史就重新生成,没有历史就返回空
         if len(history) > 0:
             query, _ = history.pop(-1)
         else:
-            return "", history
+            return history
     else:
         query = query.replace(' ', '')
         if query == None or len(query) < 1:
-            return "", history
+            return history
 
     # 将历史记录转换为openai格式
     history_t = []
@@ -970,7 +979,7 @@ def chat(
     print("chat: ", query, response)
 
     history.append([query, response])
-    return "", history
+    return history
 
 
 def regenerate(
@@ -979,14 +988,14 @@ def regenerate(
     top_p: float = 0.8,
     top_k: int = 40,
     temperature: float = 0.8,
-) -> tuple[str, list]:
+) -> list:
     """重新生成最后一次对话的内容"""
-    # 只返回history
-    return chat("", history, max_new_tokens, top_p, top_k, temperature, regenerate=True)[1]
+    return chat("", history, max_new_tokens, top_p, top_k, temperature, regenerate=True)
 
 
-def revocery(history: list):
+def revocery(history: list) -> list:
     """恢复到上一轮对话"""
+    history = [] if history is None else history
     if len(history) > 0:
         history.pop(-1)
     return history
@@ -1055,14 +1064,28 @@ with block as demo:
         query.submit(
             chat,
             inputs=[query, chatbot, max_new_tokens, top_p, top_k, temperature],
-            outputs=[query, chatbot]
+            outputs=[chatbot]
+        )
+
+        # 清空query
+        query.submit(
+            lambda: gr.Textbox(value=""),
+            [],
+            [query],
         )
 
         # 按钮提交
         submit.click(
             chat,
             inputs=[query, chatbot, max_new_tokens, top_p, top_k, temperature],
-            outputs=[query, chatbot]
+            outputs=[chatbot]
+        )
+
+        # 清空query
+        submit.click(
+            lambda: gr.Textbox(value=""),
+            [],
+            [query],
         )
 
         # 重新生成
@@ -1080,7 +1103,8 @@ with block as demo:
         )
 
     gr.Markdown("""提醒：<br>
-    1. 使用中如果出现异常，将会在文本输入框进行展示，请不要惊慌。 <br>
+    1. 使用中如果出现异常，将会在文本输入框进行展示，请不要惊慌。<br>
+    2. 项目地址: https://github.com/NagatoYuki0943/LMDeploy-Web-Demo<br>
     """)
 
 # threads to consume the request
@@ -1111,3 +1135,7 @@ demo.launch()
 经过长时间等待，构建成功，等待启动
 
 ![LMDeployWebDemo4](InternLM2_homework5.assets/LMDeployWebDemo4.png)
+
+启动成功，可以对话
+
+![LMDeployWebDemo5](InternLM2_homework5.assets/LMDeployWebDemo5.jpeg)
