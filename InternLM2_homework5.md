@@ -925,7 +925,7 @@ def chat(
     top_p: float = 0.8,
     top_k: int = 40,
     temperature: float = 0.8,
-    regenerate: bool = False
+    regenerate: str = "" # 是regen按钮的value,字符串,点击就传送,否则为空字符串
 ) -> list:
     """聊天"""
     global gen_config
@@ -976,21 +976,10 @@ def chat(
     # 放入 [] 或者 [[{},{}]] 格式返回一个response列表
     response = pipe(history_t, gen_config=gen_config).text
 
-    print("chat: ", query, response)
+    print(f"query: {query}; response: {response}")
 
     history.append([query, response])
     return history
-
-
-def regenerate(
-    history: list,
-    max_new_tokens: int = 1024,
-    top_p: float = 0.8,
-    top_k: int = 40,
-    temperature: float = 0.8,
-) -> list:
-    """重新生成最后一次对话的内容"""
-    return chat("", history, max_new_tokens, top_p, top_k, temperature, regenerate=True)
 
 
 def revocery(history: list) -> list:
@@ -1090,8 +1079,8 @@ with block as demo:
 
         # 重新生成
         regen.click(
-            regenerate,
-            inputs=[chatbot, max_new_tokens, top_p, top_k, temperature],
+            chat,
+            inputs=[query, chatbot, max_new_tokens, top_p, top_k, temperature, regen],
             outputs=[chatbot]
         )
 
@@ -1104,7 +1093,6 @@ with block as demo:
 
     gr.Markdown("""提醒：<br>
     1. 使用中如果出现异常，将会在文本输入框进行展示，请不要惊慌。<br>
-    2. 项目地址: https://github.com/NagatoYuki0943/LMDeploy-Web-Demo<br>
     """)
 
 # threads to consume the request
