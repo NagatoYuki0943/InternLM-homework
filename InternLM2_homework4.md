@@ -1329,6 +1329,7 @@ from peft import PeftModel
 import torch
 import os
 import gradio as gr
+from typing import Generator, Any
 
 
 print("torch version: ", torch.__version__)
@@ -1371,7 +1372,10 @@ model.eval()
 
 print(f"model.device: {model.device}, model.dtype: {model.dtype}")
 
-system_prompt = """你是NagatoYuki0943的小助手，内在是上海AI实验室书生·浦语的 InternLM2 1.8B 大模型哦"""
+system_prompt = """You are an AI assistant whose name is InternLM (书生·浦语).
+- InternLM (书生·浦语) is a conversational language model that is developed by Shanghai AI Laboratory (上海人工智能实验室). It is designed to be helpful, honest, and harmless.
+- InternLM (书生·浦语) can understand and communicate fluently in the language chosen by the user such as English and 中文.
+"""
 print("system_prompt: ", system_prompt)
 
 
@@ -1382,7 +1386,7 @@ def chat(
     top_p: float = 0.8,
     temperature: float = 0.8,
     regenerate: bool = False
-) -> list:
+) -> list | Generator[Any, Any, Any]:
     history = [] if history is None else history
     # 重新生成时要把最后的query和response弹出,重用query
     if regenerate:
@@ -1390,40 +1394,35 @@ def chat(
         if len(history) > 0:
             query, _ = history.pop(-1)
         else:
-            return history
+            yield history
+            return # 这样写管用,但不理解
     else:
         query = query.replace(' ', '')
         if query == None or len(query) < 1:
-            return history
+            yield history
+            return
 
     print({"max_new_tokens":  max_new_tokens, "top_p": top_p, "temperature": temperature})
 
-    # https://huggingface.co/internlm/internlm2-chat-1_8b/blob/main/modeling_internlm2.py#L1149
-    # chat 调用的 generate
-    response, history = model.chat(
-        tokenizer = tokenizer,
-        query = query,
-        history = history,
-        streamer = None,
-        max_new_tokens = max_new_tokens,
-        do_sample = True,
-        temperature = temperature,
-        top_p = top_p,
-        meta_instruction = system_prompt,
-    )
-    print("chat: ", query, response)
-
-    return history
-
-
-def regenerate(
-    history: list,
-    max_new_tokens: int = 1024,
-    top_p: float = 0.8,
-    temperature: float = 0.8,
-) -> list:
-    """重新生成最后一次对话的内容"""
-    return chat("", history, max_new_tokens, top_p, temperature, regenerate=True)
+    # https://huggingface.co/internlm/internlm2-chat-1_8b/blob/main/modeling_internlm2.py#L1185
+    # stream_chat 返回的句子长度是逐渐边长的,length的作用是记录之前的输出长度,用来截断之前的输出
+    print(f"query: {query}; response: ", end="", flush=True)
+    length = 0
+    for response, history in model.stream_chat(
+            tokenizer = tokenizer,
+            query = query,
+            history = history,
+            max_new_tokens = 1024,
+            do_sample = True,
+            temperature = 0.8,
+            top_p = 0.8,
+            meta_instruction = system_prompt,
+        ):
+        if response is not None:
+            print(response[length:], flush=True, end="")
+            length = len(response)
+            yield history
+    print("\n")
 
 
 def revocery(history: list) -> list:
@@ -1516,8 +1515,8 @@ with block as demo:
 
         # 重新生成
         regen.click(
-            regenerate,
-            inputs=[chatbot, max_new_tokens, top_p, temperature],
+            chat,
+            inputs=[query, chatbot, max_new_tokens, top_p, temperature, regen],
             outputs=[chatbot]
         )
 
@@ -1530,7 +1529,6 @@ with block as demo:
 
     gr.Markdown("""提醒：<br>
     1. 使用中如果出现异常，将会在文本输入框进行展示，请不要惊慌。<br>
-    2. 项目地址: https://github.com/NagatoYuki0943/XTuner-Web-Demo<br>
     """)
 
 # threads to consume the request
