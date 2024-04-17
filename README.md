@@ -34,3 +34,9 @@
 
 <a href="InternLM2_homework5.md">InternLM2 作业5</a>
 
+## 作业6
+
+<a href="InternLM2_note6.md">InternLM2 课程笔记6</a>
+
+<a href="InternLM2_homework6.md">InternLM2 作业6</a>
+
