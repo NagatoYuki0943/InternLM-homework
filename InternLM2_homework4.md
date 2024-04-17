@@ -1341,7 +1341,9 @@ print("gradio version: ", gr.__version__)
 model_path = './models/internlm2-chat-1_8b-self'
 os.system(f'git clone https://code.openxlab.org.cn/NagatoYuki0943/xtuner-self-assistant.git {model_path}')
 os.system(f'cd {model_path} && git lfs pull')
-quantization = False
+
+# 量化
+quantization = True
 
 # tokenizer
 tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False, trust_remote_code=True)
