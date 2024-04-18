@@ -1343,7 +1343,7 @@ os.system(f'git clone https://code.openxlab.org.cn/NagatoYuki0943/xtuner-self-as
 os.system(f'cd {model_path} && git lfs pull')
 
 # 量化
-quantization = True
+quantization = False
 
 # tokenizer
 tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False, trust_remote_code=True)
