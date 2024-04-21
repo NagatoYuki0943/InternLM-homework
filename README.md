@@ -40,3 +40,8 @@
 
 <a href="InternLM2_homework6.md">InternLM2 作业6</a>
 
+## 作业7
+
+<a href="InternLM2_note7.md">InternLM2 课程笔记7</a>
+
+<a href="InternLM2_homework7.md">InternLM2 作业7</a>
