@@ -46,7 +46,7 @@ RLHF：
 - 特点：规模小、质量高、面向特定任务场景
 - 训练完成后可以和人类对话
 
-![3](C:/Users/Frostbite/Documents/Tencent%20Files/2487575080/FileRecv/MobileFile/3.jpg)
+![3](InternLM2_note8.assets/3.jpg)
 
 ## 书生万卷
 
