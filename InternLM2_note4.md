@@ -1,7 +1,5 @@
 # Finetune简介
 
-
-
 ## 为什么需要微调
 
 很多大语言模式是基础模型，是为了一般性任务做的预训练，而把它应用于特定下游任务，表现可能不如领域内训练的模型，所以说要对他进行领域内微调，提高它在特定领域的表现。
@@ -166,9 +164,11 @@ config命名规则为
 | 数据长度 | 512          |                      |
 | Epoch    | e3、epoch3   |                      |
 
+### [数据格式介绍](https://github.com/InternLM/xtuner/blob/main/docs/zh_cn/user_guides/dataset_format.md)
+
 ### 修改配置文件
 
-**配置文件介绍**
+[配置文件介绍](https://github.com/InternLM/xtuner/blob/main/docs/zh_cn/user_guides/config.md)
 
 整体的配置文件分为五部分：
 
