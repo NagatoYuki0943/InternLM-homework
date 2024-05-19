@@ -404,7 +404,7 @@ lmdeploy serve api_server \
     --tp 1 \
     --cache-max-entry-count 0.4 \
     --quant-policy 0 \
-    --model-name internlm2_1_8b_chat \
+    --model-name internlm2 \
     --server-name 0.0.0.0 \
     --server-port 23333
 ```
