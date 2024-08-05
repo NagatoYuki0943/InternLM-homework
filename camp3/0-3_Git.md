@@ -169,7 +169,7 @@
 
 1. fork 仓库
 
-![image-20240805194135571](0-3%20Git.assets/image-20240805194135571.png)
+![image-20240805194135571](0-3_Git.assets/image-20240805194135571.png)
 
 2. clone 仓库并创建新分支
 
@@ -180,7 +180,7 @@ git branch -a # 查看分支
 git checkout -b camp3_1143 # 创建新的分支
 ```
 
-![image-20240805194452605](0-3%20Git.assets/image-20240805194452605.png)
+![image-20240805194452605](0-3_Git.assets/image-20240805194452605.png)
 
 3. 创建自己的破冰文件
 
@@ -188,7 +188,7 @@ git checkout -b camp3_1143 # 创建新的分支
 touch ./data/Git/task/camp3_1143.md
 ```
 
-![image-20240805194706520](0-3%20Git.assets/image-20240805194706520.png)
+![image-20240805194706520](0-3_Git.assets/image-20240805194706520.png)
 
 4. 提交分支
 
@@ -198,13 +198,13 @@ git commit -m "add git_1143_introduction"
 git push origin camp3_1143
 ```
 
-![image-20240805194937994](0-3%20Git.assets/image-20240805194937994.png)
+![image-20240805194937994](0-3_Git.assets/image-20240805194937994.png)
 
 
 
 5. 查看提交
 
-![image-20240805195016103](0-3%20Git.assets/image-20240805195016103.png)
+![image-20240805195016103](0-3_Git.assets/image-20240805195016103.png)
 
 
 
@@ -216,7 +216,7 @@ title
 git_1143_introduction
 ```
 
-![image-20240805195209832](0-3%20Git.assets/image-20240805195209832.png)
+![image-20240805195209832](0-3_Git.assets/image-20240805195209832.png)
 
 
 

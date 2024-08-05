@@ -61,7 +61,7 @@ print(wordcount(text2))
 
 ## 运行截图
 
-![image-20240805134712904](0-2 Python.assets/image-20240805134712904.png)
+![image-20240805134712904](0-2_Python.assets/image-20240805134712904.png)
 
 # 任务二
 
@@ -71,24 +71,24 @@ print(wordcount(text2))
 
 首先为代码打上断点
 
-![image-20240805134840690](0-2 Python.assets/image-20240805134840690.png)
+![image-20240805134840690](0-2_Python.assets/image-20240805134840690.png)
 
 点击右上角的 debug
 
-![image-20240805134956484](0-2 Python.assets/image-20240805134956484.png)
+![image-20240805134956484](0-2_Python.assets/image-20240805134956484.png)
 
 点击单步调试，左侧变量窗口可以看到字母全部变为小写的了
 
-![image-20240805135211458](0-2 Python.assets/image-20240805135211458.png)
+![image-20240805135211458](0-2_Python.assets/image-20240805135211458.png)
 
 再次单步调试，可以看到左侧变量的标点符号消失了
 
-![image-20240805135259681](0-2 Python.assets/image-20240805135259681.png)
+![image-20240805135259681](0-2_Python.assets/image-20240805135259681.png)
 
 再次调试，生成变量 counts
 
-![image-20240805135334753](0-2 Python.assets/image-20240805135334753.png)
+![image-20240805135334753](0-2_Python.assets/image-20240805135334753.png)
 
 经过多次 for 循环，可以再右侧看到 counts 中记录的单词数量
 
-![image-20240805135455635](0-2 Python.assets/image-20240805135455635.png)
+![image-20240805135455635](0-2_Python.assets/image-20240805135455635.png)

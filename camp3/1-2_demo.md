@@ -64,7 +64,7 @@ User  >>> exit
 (lmdeploy) root@intern-studio-030876:~# 
 ```
 
-![image-20240805170406281](1-2 demo.assets/image-20240805170406281.png)
+![image-20240805170406281](1-2_demo.assets/image-20240805170406281.png)
 
 # Streamlit Web Demo 部署 InternLM2-Chat-1.8B 模型
 
@@ -80,7 +80,7 @@ git clone https://github.com/InternLM/Tutorial.git
 streamlit run /root/Tutorial/tools/streamlit_demo.py --server.address 127.0.0.1 --server.port 6006
 ```
 
-![image-20240805170731319](1-2 demo.assets/image-20240805170731319.png)
+![image-20240805170731319](1-2_demo.assets/image-20240805170731319.png)
 
 3. 端口映射到本地
 
@@ -88,11 +88,11 @@ streamlit run /root/Tutorial/tools/streamlit_demo.py --server.address 127.0.0.1 
 ssh -CNg -L 6006:127.0.0.1:6006 root@ssh.intern-ai.org.cn -p 33344
 ```
 
-![image-20240805170754727](1-2 demo.assets/image-20240805170754727.png)
+![image-20240805170754727](1-2_demo.assets/image-20240805170754727.png)
 
 4. 通过浏览器访问 `http://localhost:6006` 来启动 Demo
 
-![image-20240805171727953](1-2 demo.assets/image-20240805171727953.png)
+![image-20240805171727953](1-2_demo.assets/image-20240805171727953.png)
 
 #  LMDeploy 部署 InternLM-XComposer2-VL-1.8B 模型
 
@@ -102,7 +102,7 @@ ssh -CNg -L 6006:127.0.0.1:6006 root@ssh.intern-ai.org.cn -p 33344
 lmdeploy serve gradio /share/new_models/Shanghai_AI_Laboratory/internlm-xcomposer2-vl-1_8b --cache-max-entry-count 0.1
 ```
 
-![image-20240805172936845](1-2 demo.assets/image-20240805172936845.png)
+![image-20240805172936845](1-2_demo.assets/image-20240805172936845.png)
 
 2. 端口映射到本地
 
@@ -110,11 +110,11 @@ lmdeploy serve gradio /share/new_models/Shanghai_AI_Laboratory/internlm-xcompose
 ssh -CNg -L 6006:127.0.0.1:6006 root@ssh.intern-ai.org.cn -p 33344
 ```
 
-![image-20240805170754727](1-2 demo.assets/image-20240805170754727.png)
+![image-20240805170754727](1-2_demo.assets/image-20240805170754727.png)
 
 3. 通过浏览器访问 `http://localhost:6006` 来启动 Demo
 
-![image-20240805173023388](1-2 demo.assets/image-20240805173023388.png)
+![image-20240805173023388](1-2_demo.assets/image-20240805173023388.png)
 
 # LMDeploy 部署 InternVL2-2B 模型
 
@@ -132,10 +132,10 @@ lmdeploy serve gradio /share/new_models/OpenGVLab/InternVL2-2B --cache-max-entry
 ssh -CNg -L 6006:127.0.0.1:6006 root@ssh.intern-ai.org.cn -p 33344
 ```
 
-![image-20240805170754727](1-2 demo.assets/image-20240805170754727.png)
+![image-20240805170754727](1-2_demo.assets/image-20240805170754727.png)
 
 3. 通过浏览器访问 `http://localhost:6006` 来启动 Demo
 
-![image-20240805172639824](1-2 demo.assets/image-20240805172639824.png)
+![image-20240805172639824](1-2_demo.assets/image-20240805172639824.png)
 
-![image-20240805172700499](1-2 demo.assets/image-20240805172700499.png)
+![image-20240805172700499](1-2_demo.assets/image-20240805172700499.png)

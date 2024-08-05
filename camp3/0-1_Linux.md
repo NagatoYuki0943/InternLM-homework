@@ -71,27 +71,27 @@ ssh -p 33344 root@ssh.intern-ai.org.cn -o StrictHostKeyChecking=no -o UserKnownH
 # 之后输入密码即可连接
 ```
 
-![](0-1 Linux.assets/1.png)
+![](0-1_Linux.assets/1.png)
 
 使用 vscode 连接
 
-![image-20240805132729236](0-1 Linux.assets/image-20240805132729236.png)
+![image-20240805132729236](0-1_Linux.assets/image-20240805132729236.png)
 
 点击连接
 
-![image-20240805132748157](0-1 Linux.assets/image-20240805132748157.png)
+![image-20240805132748157](0-1_Linux.assets/image-20240805132748157.png)
 
 之后输入密码进行连接
 
-![image-20240805132824394](0-1 Linux.assets/image-20240805132824394.png)
+![image-20240805132824394](0-1_Linux.assets/image-20240805132824394.png)
 
 连接后打开文件夹，再输入一遍密码即可
 
-![image-20240805132920330](0-1 Linux.assets/image-20240805132920330.png)
+![image-20240805132920330](0-1_Linux.assets/image-20240805132920330.png)
 
 连接成功
 
-![image-20240805132956636](0-1 Linux.assets/image-20240805132956636.png)
+![image-20240805132956636](0-1_Linux.assets/image-20240805132956636.png)
 
 ## 配置SSH密钥进行SSH远程连接
 
@@ -172,30 +172,30 @@ ssh root@ssh.intern-ai.org.cn -p 33344 -CNg -L 7860:127.0.0.1:7860 -o StrictHost
 
 我们可以使用touch快速的创建文件，这样我们不用手动点击进行创建了。例如我们要创建一个`demo.py`文件:
 
-![image](0-1 Linux.assets/6242dabe-99bd-400e-94ef-4d169b387b7b.png)
+![image](0-1_Linux.assets/6242dabe-99bd-400e-94ef-4d169b387b7b.png)
 
 ### **mkdir**
 
 同样的使用方法，如果要创建一个名为`test`的目录：
 
-![image](0-1 Linux.assets/2beb41a4-b21e-45b9-884b-3ca73c000766.png)
+![image](0-1_Linux.assets/2beb41a4-b21e-45b9-884b-3ca73c000766.png)
 
 ### **cd**
 
 这个命令会是使用最多的一个命令，在使用之前需要为没有计算机基础的同学讲一下目录结构，画一张图让大家理解：
 
-![image](0-1 Linux.assets/5525cdef-5340-4b82-ae8a-fca563a56649.png)
+![image](0-1_Linux.assets/5525cdef-5340-4b82-ae8a-fca563a56649.png)
 
 
 我们现在使用的是`root`目录，也是root用户的家目录`~`，linux操作系统中`/`表示根目录，根目录下有许多系统所需的目录和文件，刚才我们创建的目录就存在与`root`目录下，其中`.`表示的是当前目录，`..`表示的上级目录。如果我现在要进入到`test`目录，然后回到`root`目录，我们可以这样操作：
 
-![image](0-1 Linux.assets/1ceef7d8-96cf-412a-84b3-4a758f1e3acd.png)
+![image](0-1_Linux.assets/1ceef7d8-96cf-412a-84b3-4a758f1e3acd.png)
 
 ### **pwd**
 
 我们可以使用`pwd`命令查看当前所在的目录：这样可以方便我们确定我们当前所在哪个目录下面。
 
-![image](0-1 Linux.assets/f5944d98-2378-45b2-97aa-c57b68b4ee5e.png)
+![image](0-1_Linux.assets/f5944d98-2378-45b2-97aa-c57b68b4ee5e.png)
 
 ### **cat**
 
@@ -215,7 +215,7 @@ ssh root@ssh.intern-ai.org.cn -p 33344 -CNg -L 7860:127.0.0.1:7860 -o StrictHost
 
 当我们需要编辑文件的时候可以使用`vi`或者`vim`命令，当你进入文件编辑以后，有三种模式：
 
-![image](0-1 Linux.assets/c9390795-0960-4b99-922a-c3b2cf3c6225.png)
+![image](0-1_Linux.assets/c9390795-0960-4b99-922a-c3b2cf3c6225.png)
 
 
 进入编辑模式可以使用`i`，vim的方便之处就是可以在终端进行简单的文件修改。
@@ -303,7 +303,7 @@ ln [参数][源文件或目录][目标文件或目录]
 - `-R`：递归列出子目录的内容。
 - `-t`：按文件修改时间排序显示。、
 
-![image](0-1 Linux.assets/d380fa75-e1ea-459a-ba62-3043c3dddc46.png)
+![image](0-1_Linux.assets/d380fa75-e1ea-459a-ba62-3043c3dddc46.png)
 
 ### **sed**
 
@@ -322,12 +322,12 @@ ln [参数][源文件或目录][目标文件或目录]
   - `s`：使用正则表达式进行文本替换。例如，`s/old/new/g` 将所有 "InternLM" 替换为 "InternLM yyds"。
 - **示例：**
 
-![image](0-1 Linux.assets/c2c1a107-37eb-474d-b35e-df2105adf66d.png)
+![image](0-1_Linux.assets/c2c1a107-37eb-474d-b35e-df2105adf66d.png)
 
 
 在示例中使用了`echo`命令，这和python中的`print`一样，用来打印内容，这里使用管道符`>`将InternLM打印到file文件中，常用的管道符还有`<`和`|`，比如我们可以使用`grep`命令来查看python中安装的包含`os`字段的包：
 
-![image](0-1 Linux.assets/c4c4df56-e0f5-47df-a7bf-38744c1d192a.png)
+![image](0-1_Linux.assets/c4c4df56-e0f5-47df-a7bf-38744c1d192a.png)
 
 
 `grep`是一个强大的文本搜索工具。常用参数如下：
@@ -466,7 +466,7 @@ ln [参数][源文件或目录][目标文件或目录]
 
 下面通过一张图片对GPU信息进行介绍：
 
-![image](0-1 Linux.assets/1ebd2761-c329-4fd8-bc03-8770f9a1b1a6.png)
+![image](0-1_Linux.assets/1ebd2761-c329-4fd8-bc03-8770f9a1b1a6.png)
 
 # web demo（作业）
 
@@ -505,16 +505,16 @@ with gr.Blocks(gr.themes.Soft()) as demo:
 demo.launch()
 ```
 
-![](0-1 Linux.assets/3.png)
+![](0-1_Linux.assets/3.png)
 
 启动 demo
 
-![](0-1 Linux.assets/4.png)
+![](0-1_Linux.assets/4.png)
 
 启动端口映射
 
-![](0-1 Linux.assets/5.png)
+![](0-1_Linux.assets/5.png)
 
 成功访问
 
-![](0-1 Linux.assets/6.png)
+![](0-1_Linux.assets/6.png)
