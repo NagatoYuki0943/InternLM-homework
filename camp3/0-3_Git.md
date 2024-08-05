@@ -226,6 +226,6 @@ pull request 链接: https://github.com/InternLM/Tutorial/pull/1552
 
 [InternLM-homework](https://github.com/NagatoYuki0943/InternLM-homework) 本仓库用来存储第二期和第三期笔记和作业
 
-![image-20240805141612270](0-3 Git.assets/image-20240805141612270.png)
+![image-20240805141612270](0-3_Git.assets/image-20240805141612270.png)
 
-![image-20240805141524974](0-3 Git.assets/image-20240805141524974.png)
+![image-20240805141524974](0-3_Git.assets/image-20240805141524974.png)
