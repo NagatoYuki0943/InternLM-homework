@@ -64,7 +64,7 @@ response = llm.chat(messages=[ChatMessage(content="msi x670 godlike 有几个内
 print(response)
 ```
 
-> 回答的不正确，将 MSI x670 识别为了显卡，实际上时主板
+> 回答的不正确，将 MSI x670 识别为了显卡，实际上是主板
 
 ```sh
 (lmdeploy) root@intern-studio-030876:~/llamaindex_demo# python llamaindex_internlm.py 
