@@ -12,7 +12,7 @@ ln -s /root/share/new_models/Shanghai_AI_Laboratory/internlm2_5-1_8b-chat/ ./
 ls
 ```
 
-![image-20240806192911179](1-5_xtuner.assets/image-20240806192911179.png)
+![image-20240806192911179](1-6_xtuner.assets/image-20240806192911179.png)
 
 2. 尝试微调之前的模型
 
@@ -300,11 +300,11 @@ streamlit run xtuner_streamlit_demo.py
 ssh -CNg -L 8501:127.0.0.1:8501 root@ssh.intern-ai.org.cn -p 33344
 ```
 
-![image-20240806134534759](1-5_xtuner.assets/image-20240806134534759.png)
+![image-20240806134534759](1-6_xtuner.assets/image-20240806134534759.png)
 
 网页测试，效果并不好
 
-![image-20240806194159182](1-5_xtuner.assets/image-20240806194159182.png)
+![image-20240806194159182](1-6_xtuner.assets/image-20240806194159182.png)
 
 准备微调数据
 
@@ -345,7 +345,7 @@ with open('datas/assistant.json', 'w', encoding='utf-8') as f:
 
 生成的数据格式如下
 
-![image-20240806194454911](1-5_xtuner.assets/image-20240806194454911.png)
+![image-20240806194454911](1-6_xtuner.assets/image-20240806194454911.png)
 
 复制一个预设的配置文件
 
@@ -632,7 +632,7 @@ log_processor = dict(by_epoch=False)
 xtuner train ./internlm2_5-1_8b-chat_qlora_custom_e3.py
 ```
 
-![image-20240806195722550](1-5_xtuner.assets/image-20240806195722550.png)
+![image-20240806195722550](1-6_xtuner.assets/image-20240806195722550.png)
 
 
 
@@ -737,7 +737,7 @@ streamlit run xtuner_streamlit_demo.py
 
 成功运行
 
-![image-20240806202347368](1-5_xtuner.assets/image-20240806202347368.png)
+![image-20240806202347368](1-6_xtuner.assets/image-20240806202347368.png)
 
 
 
@@ -768,13 +768,13 @@ streamlit run xtuner_streamlit_demo.py
 城乡二元结构是一个复杂而动态的过程，随着全球化、信息技术的进步以及各国政府政策的调整，这一结构正在经历一些变化。近年来，许多国家和地区都在寻求通过综合政策、经济转型、社会包容等多种手段来缩小城乡差距，促进城乡一体化。
 ```
 
-![image-20240807173122455](1-5_xtuner.assets/image-20240807173122455.png)
+![image-20240807173122455](1-6_xtuner.assets/image-20240807173122455.png)
 
 2. 使用 [我们的钱](https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzA5ODY2NDIyNQ==&action=getalbum&album_id=3419866556862545923&scene=173&subscene=&sessionid=738667631&enterid=0&from_msgid=2652043236&from_itemidx=1&count=3&nolastread=1) 系列文章作为增量预训练文本
 
 下载文本并转换为 json
 
-![image-20240807165110911](1-5_xtuner.assets/image-20240807165110911.png)
+![image-20240807165110911](1-6_xtuner.assets/image-20240807165110911.png)
 
 3. 创建训练脚本
 
@@ -1079,7 +1079,7 @@ log_processor = dict(
 xtuner train train/internlm2_5-1_8b-chat_qlora_pretrain_e1.py
 ```
 
-![image-20240807170856114](1-5_xtuner.assets/image-20240807170856114.png)
+![image-20240807170856114](1-6_xtuner.assets/image-20240807170856114.png)
 
 5. 查看训练效果
 
@@ -1098,7 +1098,7 @@ xtuner train train/internlm2_5-1_8b-chat_qlora_pretrain_e1.py
 城乡二元结构的形成是一个复杂的历史过程，涉及经济、社会、政治等多方面的因素。尽管改革开放以来，中国政府采取了一系列措施，试图缩小城乡差距，促进城乡一体化发展，但城乡二元结构的问题依然存在，需要长期努力才能逐步解决。
 ```
 
-![image-20240807172053945](1-5_xtuner.assets/image-20240807172053945.png)
+![image-20240807172053945](1-6_xtuner.assets/image-20240807172053945.png)
 
 # 将自我认知的模型上传到 OpenXLab
 
@@ -1106,7 +1106,7 @@ xtuner train train/internlm2_5-1_8b-chat_qlora_pretrain_e1.py
 
 https://openxlab.org.cn/models/detail/NagatoYuki0943/internlm2_5-1_8b-chat-self-assistant
 
-![image-20240807094040836](1-5_xtuner.assets/image-20240807094040836.png)
+![image-20240807094040836](1-6_xtuner.assets/image-20240807094040836.png)
 
 2. clone 仓库到本地
 
@@ -1177,11 +1177,11 @@ To https://code.openxlab.org.cn/NagatoYuki0943/internlm2_5-1_8b-chat-self-assist
    ef4adad..3f7b476  main -> main
 ```
 
-![image-20240807095538339](1-5_xtuner.assets/image-20240807095538339.png)
+![image-20240807095538339](1-6_xtuner.assets/image-20240807095538339.png)
 
 5. 在浏览器查看
 
-![image-20240807095548279](1-5_xtuner.assets/image-20240807095548279.png)
+![image-20240807095548279](1-6_xtuner.assets/image-20240807095548279.png)
 
 # 部署到 OpenXLab
 
@@ -1189,7 +1189,7 @@ To https://code.openxlab.org.cn/NagatoYuki0943/internlm2_5-1_8b-chat-self-assist
 
 https://github.com/NagatoYuki0943/XTuner-Web-Demo
 
-![image-20240807095151590](1-5_xtuner.assets/image-20240807095151590.png)
+![image-20240807095151590](1-6_xtuner.assets/image-20240807095151590.png)
 
 使用的 lmdeploy 进行部署
 
@@ -1469,10 +1469,10 @@ if __name__ == "__main__":
 
 https://openxlab.org.cn/apps/detail/NagatoYuki0943/XTuner-self-assistant
 
-![image-20240807100849984](1-5_xtuner.assets/image-20240807100849984.png)
+![image-20240807100849984](1-6_xtuner.assets/image-20240807100849984.png)
 
-![image-20240807100808539](1-5_xtuner.assets/image-20240807100808539.png)
+![image-20240807100808539](1-6_xtuner.assets/image-20240807100808539.png)
 
 3. 启动成功
 
-![image-20240807145640495](1-5_xtuner.assets/image-20240807145640495.png)
+![image-20240807145640495](1-6_xtuner.assets/image-20240807145640495.png)
