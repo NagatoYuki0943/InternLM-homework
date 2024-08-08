@@ -1475,4 +1475,4 @@ https://openxlab.org.cn/apps/detail/NagatoYuki0943/XTuner-self-assistant
 
 3. 启动成功
 
-![2024-08-07 145524](C:/Users/algorithm2/Pictures/Screenshots/2024-08-07 145524.png)
+![image-20240807145640495](1-5_xtuner.assets/image-20240807145640495.png)
