@@ -96,7 +96,7 @@ https://a5z7mxawn8.feishu.cn/docx/KqzBdm3vToeADjxt4A0cm1mtn5X
 
 | 模型服务来源 | compassarea                                                  |
 | ------------ | ------------------------------------------------------------ |
-| 您的输入     |                                                              |
+| 您的输入     | Python中实现图像卷积的库有哪些?                              |
 | 模型A        | `internlm2.5-7b-chat`                                        |
 | 模型B        | `Qwen1.5-14B-Chat (阿里通义千问)`                            |
 | 模型A输出    | Python中实现图像卷积的常用库有：OpenCV：OpenCV是一个开源计算机视觉库，提供了多种图像处理和计算机视觉算法，包括图像卷积。可以通过以下代码使用OpenCV进行图像卷积：`import cv2 # 读取图像 img = cv2.imread('image.jpg') # 定义卷积核 kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]]) # 进行卷积操作 convolved_img = cv2.filter2D(img, -1, kernel) # 显示结果 cv2.imshow('Convolved Image', convolved_img) cv2.waitKey(0) cv2.destroyAllWindows()`NumPy：NumPy是一个用于科学计算的Python库，提供了高效的数组操作和数学函数。可以通过以下代码使用NumPy进行图像卷积：`import numpy as np from scipy.signal import convolve2d # 读取图像 img = cv2.imread('image.jpg') # 定义卷积核 kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]]) # 将图像转化为灰度图 gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) # 进行卷积操作 convolved_img = convolve2d(gray_img, kernel, mode='same') # 显示结果 cv2.imshow('Convolved Image', convolved_img) cv2.waitKey(0) cv2.destroyAllWindows()`scikit-image：scikit-image是一个基于NumPy的图像处理库，提供了多种图像处理和计算机视觉算法，包括图像卷积。可以通过以下代码使用scikit-image进行图像卷积：`from skimage import io, filters # 读取图像 img = io.imread('image.jpg') # 定义卷积核 kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]]) # 进行卷积操作 convolved_img = filters.convolve(img, kernel, mode='constant') # 显示结果 io.imshow(convolved_img) io.show()` |
