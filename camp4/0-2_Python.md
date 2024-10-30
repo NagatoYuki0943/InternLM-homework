@@ -121,7 +121,7 @@ your_directory = '/root/myenvs'
 if your_directory not in sys.path:  
     # 将目录添加到 sys.path  
     sys.path.append(your_directory)  
-  
+
 # 现在你可以直接导入该目录中的模块了  
 import numpy as np
 print(np.__version__)
