@@ -1,6 +1,6 @@
 # InternLM 学习笔记
 
-<a href="./camp2">camp2 对应第三期笔记和作业</a>
+<a href="./camp2">camp2 对应第二期笔记和作业</a>
 
 <a href="./camp3">camp3 对应第三期笔记和作业</a>
 
