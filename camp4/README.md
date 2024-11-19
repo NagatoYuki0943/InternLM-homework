@@ -34,7 +34,7 @@
 
 ### <a href="">Lagent 自定义你的 Agent 智能体</a>
 
-### <a href="">LMDeploy 量化部署进阶实践</a>
+### <a href="2-3_lmdeploy.md">LMDeploy 量化部署进阶实践</a>
 
 ### <a href="2-4_internvl.md">InternVL 多模态模型部署微调实践</a>
 
