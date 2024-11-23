@@ -32,7 +32,7 @@
 
 ### <a href="">探索书生大模型能力边界</a>
 
-### <a href="">Lagent 自定义你的 Agent 智能体</a>
+### <a href="2-2_lagent.md">Lagent 自定义你的 Agent 智能体</a>
 
 ### <a href="2-3_lmdeploy.md">LMDeploy 量化部署进阶实践</a>
 
