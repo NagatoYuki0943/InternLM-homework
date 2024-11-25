@@ -26,7 +26,7 @@ lmdeploy chat models/internlm2_5-7b-chat
 
 对于一个7B（70亿）参数的模型，每个参数使用16位浮点数（等于 2个 Byte）表示，则模型的权重大小约为：
 
-**70×10^9 parameters×2 Bytes/parameter=14GB**
+**7×10^9 parameters×2 Bytes/parameter=14GB**
 
 **70亿个参数×每个参数占用2个字节=14GB**
 
@@ -132,7 +132,7 @@ lmdeploy chat models/internlm2_5-7b-chat --cache-max-entry-count 0.4
 
 计算一下**4GB**显存的减少缘何而来:
 
-1、在 BF16 精度下，7B模型权重占用**14GB**：70×10^9 parameters×2 Bytes/parameter=**14GB**
+1、在 BF16 精度下，7B模型权重占用**14GB**：7×10^9 parameters×2 Bytes/parameter=**14GB**
 
 2、kv cache占用**8GB**：剩余显存**24-14=10GB**，kv cache默认占用80%，即**10\*0.8=8GB**
 
@@ -259,7 +259,7 @@ lmdeploy chat models/internlm2_5-1_8b-chat-w4a16-4bit --model-format awq
 
 对于W4A16量化之前，即如[1.3 LMDeploy验证启动模型文件](https://github.com/InternLM/Tutorial/tree/camp4/docs/L2/LMDeploy#1.3)所示直接启动模型的显存占用情况(**21GB**)：
 
-1、在 BF16 精度下，7B模型权重占用**3.35GB**：18×10^9 parameters×2 Bytes/parameter=**3.35GB**
+1、在 BF16 精度下，7B模型权重占用**3.35GB**：1.8×10^9 parameters×2 Bytes/parameter=**3.35GB**
 
 2、kv cache占用**16.5GB**：剩余显存**24-3.35=20.6GB**，kv cache默认占用80%，即**20.6\*0.8=16.5GB**
 
@@ -289,7 +289,7 @@ lmdeploy chat models/internlm2_5-1_8b-chat-w4a16-4bit --model-format awq
 
 对于W4A16量化之前，即如[1.3 LMDeploy验证启动模型文件](https://github.com/InternLM/Tutorial/tree/camp4/docs/L2/LMDeploy#1.3)所示直接启动模型的显存占用情况(**23GB**)：
 
-1、在 BF16 精度下，7B模型权重占用**14GB**：70×10^9 parameters×2 Bytes/parameter=**14GB**
+1、在 BF16 精度下，7B模型权重占用**14GB**：7×10^9 parameters×2 Bytes/parameter=**14GB**
 
 2、kv cache占用**8GB**：剩余显存**24-14=10GB**，kv cache默认占用80%，即**10\*0.8=8GB**
 
