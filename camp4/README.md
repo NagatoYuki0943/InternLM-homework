@@ -30,7 +30,7 @@
 
 ## 进阶关卡
 
-### <a href="">探索书生大模型能力边界</a>
+### <a href="2-1_intern_ability.md">探索书生大模型能力边界</a>
 
 ### <a href="2-2_lagent.md">Lagent 自定义你的 Agent 智能体</a>
 
