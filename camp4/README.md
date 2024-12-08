@@ -40,7 +40,7 @@
 
 ### <a href="">茴香豆：企业级知识库问答工具</a>
 
-### <a href="">MindSearch深度解析及实践</a>
+### <a href="2-6_mindsearch.md">MindSearch深度解析及实践</a>
 
 ## 彩蛋岛
 
